@@ -86,7 +86,9 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnecting', () => {
-        console.log(`${myNickname}이 방 ${myRoomName}에서 퇴장`)
+        if (myNickname && myRoomName) {
+            console.log(`${myNickname}이 방 ${myRoomName}에서 퇴장`)
+        }
         socket.to(myRoomName).emit('leave_room', socket.id)
 
         let isRoomEmpty = false
