@@ -68,7 +68,7 @@ io.on('connection', (socket) => {
         })
         targetRoomObj.currentNum++
 
-        console.log(`${nickname}이 방 ${roomName}에 입장`)
+        console.log(`${nickname}이 방 ${roomName}에 입장 (${targetRoomObj.currentNum}/${MAXIMUM})`)
         socket.join(roomName)
         socket.emit('accept_join', targetRoomObj.users)
     })
@@ -98,8 +98,10 @@ io.on('connection', (socket) => {
                 )
                 roomObjArr[i].users = newUsers
                 roomObjArr[i].currentNum--
+                console.log(`방 ${roomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`)
                 if (roomObjArr[i].currentNum === 0) {
                     isRoomEmpty = true
+                    console.log(`방 ${roomName} 삭제됨`)
                 }
             }
         }
