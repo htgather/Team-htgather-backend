@@ -40,6 +40,7 @@ io.on('connection', (socket) => {
             if (roomObjArr[i].roomName === roomName) {
                 // 정원 초과
                 if (roomObjArr[i].currentNum >= MAXIMUM) {
+                    console.log(`${nickname}이 방 ${roomName}에 입장 실패 (정원 초과)`)
                     socket.emit('reject_join')
                     return
                 }
@@ -67,6 +68,7 @@ io.on('connection', (socket) => {
         })
         targetRoomObj.currentNum++
 
+        console.log(`${nickname}이 방 ${roomName}에 입장`)
         socket.join(roomName)
         socket.emit('accept_join', targetRoomObj.users)
     })
@@ -84,6 +86,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnecting', () => {
+        console.log(`${myNickname}이 방 ${myRoomName}에서 퇴장`)
         socket.to(myRoomName).emit('leave_room', socket.id)
 
         let isRoomEmpty = false
@@ -106,10 +109,6 @@ io.on('connection', (socket) => {
             )
             roomObjArr = newRoomObjArr
         }
-    })
-
-    socket.on('test', (time) => {
-        console.log(time)
     })
 })
 
