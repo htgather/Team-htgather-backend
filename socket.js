@@ -98,10 +98,10 @@ io.on('connection', (socket) => {
                 )
                 roomObjArr[i].users = newUsers
                 roomObjArr[i].currentNum--
-                console.log(`방 ${roomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`)
+                console.log(`방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`)
                 if (roomObjArr[i].currentNum === 0) {
                     isRoomEmpty = true
-                    console.log(`방 ${roomName} 삭제됨`)
+                    console.log(`방 ${myRoomName} 삭제됨`)
                 }
             }
         }
