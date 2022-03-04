@@ -4,7 +4,8 @@
     },
     "dependencies": {
         "cors": "^2.8.5",
-        "express": "^4.17.3"
+        "express": "^4.17.3",
+        "socket.io": "^4.4.1"
     },
     "devDependencies": {
         "prettier": "^2.5.1"

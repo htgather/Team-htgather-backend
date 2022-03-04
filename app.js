@@ -3,34 +3,29 @@ const express = require('express')
 const cors = require('cors')
 
 const app = express()
-const port = 4000
+// const routers = require('./routes')
 // connect()
 
-// routers
-
 app.use(cors()) // origin 추가
-app.use(express.urlencoded())
 app.use(express.json())
-
-// routers 입력
-// app.use('/api', [])
+app.use(express.urlencoded({ extended: false }))
+// app.use('/api', routers)
 
 // Request log
 app.use((req, res, next) => {
-	console.log(
-		'Request URL:',
-		`[${req.method}]`,
-		req.originalUrl,
-		' - ',
-		new Date().toLocaleString()
-	)
-	next()
+    console.log(
+        'Request URL:',
+        `[${req.method}]`,
+        req.originalUrl,
+        ' - ',
+        new Date().toLocaleString()
+    )
+    next()
 })
 
+// 클라이언트에 error 내용 전송
 app.use((err, req, res, next) => {
-    res.status(401).send({ errorMessage: err })
+    res.status(400).send({ errorMessage: err })
 })
 
-app.listen(port, () => {
-    console.log(port, '포트로 서버가 요청 받을 준비가 됐습니다!')
-})
+module.exports = app
