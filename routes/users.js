@@ -37,5 +37,4 @@ router.patch('/users', authorization, async (req, res) => {
     res.json({ message: '회원정보 수정 성공' })
 })
 
-
 module.exports = router

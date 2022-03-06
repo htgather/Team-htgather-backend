@@ -1,29 +1,27 @@
 const mongoose = require('mongoose')
 
-const workOutTimesSchema = new mongoose.Schema(
+const workOutTimeSchema = new mongoose.Schema(
     {
         userId: {
             type: String,
-            default: '',
-        },
-        doneAt: {
-            type: Date,
-            default: '',
         },
         workOutTime: {
             type: Number,
-            default: '',
         },
     },
     { timestamps: true }
 )
 
-workOutTimesSchema.virtual('workOutTimesId').get(function () {
+workOutTimeSchema.virtual('workOutTimeId').get(function () {
     return this._id.toHexString()
 })
 
-workOutTimesSchema.set('toJSON', {
+workOutTimeSchema.virtual('doneAt').get(function () {
+    return this.createdAt
+})
+
+workOutTimeSchema.set('toJSON', {
     virtuals: true,
 })
 
-module.exports = mongoose.model('WorkOutTimes', workOutTimesSchema)
+module.exports = mongoose.model('WorkOutTime', workOutTimeSchema)
