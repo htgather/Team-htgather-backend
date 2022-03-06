@@ -4,11 +4,10 @@
     },
     "dependencies": {
         "cors": "^2.8.5",
+        "dotenv": "^16.0.0",
         "express": "^4.17.3",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^6.2.4",
-        "passport": "^0.5.2",
-        "passport-kakao": "^1.0.1",
         "socket.io": "^4.4.1"
     },
     "devDependencies": {

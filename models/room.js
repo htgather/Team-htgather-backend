@@ -46,9 +46,9 @@ const roomSchema = new mongoose.Schema(
     { timestamps: true }
 )
 
-roomsSchema.virtual("roomsId").get(function () {
-    return this._id.toHexString();
-  });
+roomsSchema.virtual('roomsId').get(function () {
+    return this._id.toHexString()
+})
 
 roomSchema.set('toJSON', {
     virtuals: true,
