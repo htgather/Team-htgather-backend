@@ -1,15 +1,23 @@
 const express = require('express')
-// const connect = require('./models')
+const connect = require('./models')
 const cors = require('cors')
+// 개발 환경에서는 사용할 필요가 없으므로 배포 환경일 때만 적용하면 됨 
+// hpp:HTTP 매개변수 오염 공격으로부터 보호하는 Express 미들웨어
+// const helmet = require('helmet');
+// const hpp = require('hpp');
 
 const app = express()
-// const routers = require('./routes')
-// connect()
+const routers = require('./routes')
+connect()
 
+// const roomsRouter = require('./routes/rooms')
+// app.use(helmet())
+// app.use(hpp())
 app.use(cors()) // origin 추가
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-// app.use('/api', routers)
+app.use(routers)
+// app.use('/api', [roomsRouter]);
 
 // Request log
 app.use((req, res, next) => {
