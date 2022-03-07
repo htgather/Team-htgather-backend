@@ -59,7 +59,7 @@ router.post('/rooms', authorization, async (req, res) => {
 router.post('/rooms/:roomId', authorization, async (req, res) => {
     const { roomId } = req.params
     const { userId } = res.locals.user
-    const existroom = await Room.findOne({ roomId })
+    const existroom = await Room.findById(roomId)
     const user = await User.findOne({ userId })
     try {
         if (!existroom)
@@ -88,17 +88,18 @@ router.post('/rooms/:roomId', authorization, async (req, res) => {
 //방 나가기
 router.post('/rooms/exit/:roomId', authorization, async (req, res) => {
     const { roomId } = req.params
-    const existRoom = await Room.findOne({ roomId })
     try {
         await Room.findOneAndUpdate(
             { roomId: roomId },
             { $inc: { numberOfPeopleInRoom: -1 } }
         )
+        const existRoom = await Room.findById(roomId)
         if (!existRoom.numberOfPeopleInRoom) {
-            return await Room.deleteOne({ roomId })
+            await Room.findByIdAndRemove(roomId)
+            return res.status(200).json({ message: '방 삭제 됨' })
         }
         // await PersonInRoom.create({ userId, roomId, nick }); ---> 새로운 스키마가 생길때
-        return res.status(201).json({ message: '운동 끝' })
+        return res.status(200).json({ message: '운동 끝' })
     } catch (err) {
         res.status(400).json({
             message:

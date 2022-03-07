@@ -31,7 +31,7 @@ router.post('/users/auth', async (req, res) => {
 router.patch('/users', authorization, async (req, res) => {
     const { userId } = res.locals.user
     const { nickName } = req.body
-    const existUser = await User.findOne({ userId })
+    const existUser = await User.findById(userId)
     existUser.nickName = nickName
     await existUser.save()
     res.json({ message: '회원정보 수정 성공' })

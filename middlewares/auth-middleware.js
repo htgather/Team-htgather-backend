@@ -11,8 +11,8 @@ module.exports = (req, res, next) => {
         })
     }
     try {
-        const { userId } = jwt.verify(authToken, JWT_KEY)
-        User.findOne({ userId }).then((user) => {
+        const { userId } = jwt.verify(authToken, process.env.JWT_KEY)
+        User.findById(userId).then((user) => {
             res.locals.user = user
             next()
         })
@@ -21,4 +21,10 @@ module.exports = (req, res, next) => {
             message: '로그인 후 이용 가능한 기능입니다.',
         })
     }
+
+    // // 테스트 용
+    // User.findOne({}).then((user) => {
+    //     res.locals.user = user
+    //     next()
+    // })
 }
