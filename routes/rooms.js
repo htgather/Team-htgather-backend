@@ -42,7 +42,7 @@ router.post('/rooms', authorization, async (req, res) => {
                 .json({ message: '글자 수 제한을 초과했습니다.' })
         }
         const numberOfPeopleInRoom = 1
-        await Room.create({
+        const roomInfo = await Room.create({
             creator,
             roomTitle,
             videoThumbnail,
@@ -55,7 +55,7 @@ router.post('/rooms', authorization, async (req, res) => {
             numberOfPeopleInRoom,
         })
 
-        res.status(201).json({ message: '방 만들기 성공' })
+        res.status(201).json({ roomInfo })
     } catch (err) {
         console.log(err)
         return res.status(400).json({ message: err.message })
