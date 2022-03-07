@@ -12,7 +12,7 @@ const roomSchema = new mongoose.Schema(
             type: String,
         },
         videoLength: {
-            type: Number,
+            type: String,
         },
         videoUrl: {
             type: String,

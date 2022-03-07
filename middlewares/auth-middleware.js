@@ -21,10 +21,4 @@ module.exports = (req, res, next) => {
             message: '로그인 후 이용 가능한 기능입니다.',
         })
     }
-
-    // // 테스트 용
-    // User.findOne({}).then((user) => {
-    //     res.locals.user = user
-    //     next()
-    // })
 }
