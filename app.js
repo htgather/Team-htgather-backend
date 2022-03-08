@@ -16,7 +16,6 @@ connect()
 app.use(cors()) // origin 추가
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(routers)
 
 // Request log
 app.use((req, res, next) => {
@@ -29,6 +28,8 @@ app.use((req, res, next) => {
     )
     next()
 })
+
+app.use(routers)
 
 // 클라이언트에 error 내용 전송
 app.use((err, req, res, next) => {
