@@ -23,6 +23,9 @@ const roomSchema = new mongoose.Schema(
         videoStartAfter: {
             type: Number,
         },
+        videoStartAt: {
+            type: String
+        },
         category: {
             type: String,
         },

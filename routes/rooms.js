@@ -3,6 +3,8 @@ const Room = require('../models/room')
 const User = require('../models/user')
 const router = express.Router()
 const authorization = require('../middlewares/auth-middleware')
+const moment = require('moment')
+moment.locale('ko')
 
 // 방 만들기
 router.post('/rooms', authorization, async (req, res) => {
@@ -42,6 +44,12 @@ router.post('/rooms', authorization, async (req, res) => {
                 .json({ message: '글자 수 제한을 초과했습니다.' })
         }
         const numberOfPeopleInRoom = 1
+
+        const videoStartAt = moment()
+            .add(videoStartAfter, 'm')
+            .calendar()
+            .substring(3)
+
         const roomInfo = await Room.create({
             creator,
             roomTitle,
@@ -50,6 +58,7 @@ router.post('/rooms', authorization, async (req, res) => {
             videoUrl,
             videoTitle,
             videoStartAfter,
+            videoStartAt,
             category,
             difficulty,
             numberOfPeopleInRoom,
@@ -66,21 +75,33 @@ router.post('/rooms', authorization, async (req, res) => {
 router.post('/rooms/:roomId', authorization, async (req, res) => {
     const { roomId } = req.params
     const existroom = await Room.findById(roomId)
+
+    // 시간에 따른 방 입장 가능 여부 조사
+    const createdAt = existroom.createdAt
+    const videoStartAfter = existroom.videoStartAfter
+    const now = Date.now()
+    const videoStart = createdAt.getTime() + videoStartAfter * 60000
+
     try {
         if (!existroom)
             return res.status(400).json({
                 message: '존재하지 않는 방입니다.',
             })
 
+        if (now > videoStart) {
+            return res.status(400).json({
+                message: '이미 운동이 시작되었습니다.',
+            })
+        }
+
         if (existroom.numberOfPeopleInRoom >= 5) {
             return res.status(400).json({
                 message: '입장불가, 5명 초과',
             })
         }
-        await Room.findOneAndUpdate(
-            { roomId: roomId },
-            { $inc: { numberOfPeopleInRoom: 1 } }
-        )
+        await Room.findByIdAndUpdate(roomId, {
+            $inc: { numberOfPeopleInRoom: 1 },
+        })
         return res.status(201).json({ message: '입장 완료' })
     } catch (err) {
         console.log(err)
