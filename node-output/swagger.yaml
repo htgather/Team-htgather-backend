@@ -258,6 +258,9 @@
       "room" : {
         "type" : "object",
         "properties" : {
+          "_id" : {
+            "type" : "object"
+          },
           "creator" : {
             "type" : "string"
           },
@@ -304,6 +307,23 @@
           },
           "snsId" : {
             "type" : "string"
+          },
+          "createdAt" : {
+            "type" : "object"
+          }
+        }
+      },
+      "workOutTime" : {
+        "type" : "object",
+        "properties" : {
+          "_id" : {
+            "type" : "object"
+          },
+          "userId" : {
+            "type" : "string"
+          },
+          "workOutTime" : {
+            "type" : "number"
           },
           "createdAt" : {
             "type" : "object"
