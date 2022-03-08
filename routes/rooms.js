@@ -113,10 +113,9 @@ router.post('/rooms/:roomId', authorization, async (req, res) => {
 router.post('/rooms/exit/:roomId', authorization, async (req, res) => {
     const { roomId } = req.params
     try {
-        await Room.findOneAndUpdate(
-            { roomId: roomId },
-            { $inc: { numberOfPeopleInRoom: -1 } }
-        )
+        await Room.findByIdAndUpdate(roomId, {
+            $inc: { numberOfPeopleInRoom: -1 },
+        })
         const existRoom = await Room.findById(roomId)
         if (!existRoom.numberOfPeopleInRoom) {
             await Room.findByIdAndRemove(roomId)
