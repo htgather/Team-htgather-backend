@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: false }))
 
 // Request log
 app.use((req, res, next) => {
+    if (req.originalUrl === '/') return next()
     console.log(
         'Request URL:',
         `[${req.method}]`,
