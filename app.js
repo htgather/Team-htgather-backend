@@ -25,7 +25,8 @@ app.use((req, res, next) => {
         `[${req.method}]`,
         req.originalUrl,
         ' - ',
-        new Date().toLocaleString()
+        new Date().toLocaleString(),
+        req.ip
     )
     next()
 })
