@@ -10,8 +10,8 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
     const { userId } = res.locals.user
 
     // 이번 주 운동 횟수 & 주간 목표
-    const weekStart = moment().startOf('isoweek').toDate()
-    const weekEnd = moment().endOf('isoweek').toDate()
+    const weekStart = moment().startOf('isoWeek').toDate()
+    const weekEnd = moment().endOf('isoWeek').toDate()
 
     const recordsPerWeek = await WorkOutTime.find({
         userId,
@@ -40,10 +40,7 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
     }
 
     const countDictEntries = Object.entries(dict).sort((a, b) => b[1] - a[1])
-    const maxCount = countDictEntries[0][1]
-    const mostExercised = countDictEntries
-        .filter((x) => x[1] === maxCount)
-        .map((x) => x[0])
+    const mostExercised = countDictEntries.slice(0, 2).map((x) => x[0])
 
     // 이번 달 총 운동 시간
     const monthStart = moment().startOf('month').toDate()
