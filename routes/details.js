@@ -4,10 +4,10 @@ const authorization = require('../middlewares/auth-middleware.js')
 const WorkOutTime = require('../models/workOutTime')
 
 // 운동 시간 기록
-router.post('/records', authorization, async (req, res) => {
+router.post('/myinfo/records', authorization, async (req, res) => {
     const { userId } = res.locals.user
-    const { workOutTime } = req.body
-    await WorkOutTime.create({ userId, workOutTime })
+    const { workOutTime, category } = req.body
+    await WorkOutTime.create({ userId, workOutTime, category })
 
     res.json({ message: '운동시간 기록 성공' })
 })

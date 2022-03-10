@@ -15,7 +15,7 @@ router.post('/users/auth', async (req, res) => {
         user = existUser
     } else {
         // 존재하는 유저가 없으면 회원 가입
-        const newUser = new User({ nickName, snsId })
+        const newUser = new User({ nickName, snsId, weeklyGoal: 3 })
         await newUser.save()
         user = newUser
     }

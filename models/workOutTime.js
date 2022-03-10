@@ -8,6 +8,9 @@ const workOutTimeSchema = new mongoose.Schema(
         workOutTime: {
             type: Number,
         },
+        category: {
+            type: String,
+        },
     },
     { timestamps: true }
 )
