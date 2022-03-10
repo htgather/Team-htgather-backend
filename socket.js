@@ -120,6 +120,10 @@ io.on('connection', (socket) => {
             roomObjArr = newRoomObjArr
         }
     })
+
+	socket.on('emoji', () => {
+		socket.to(myRoomName).emit('emoji', socket.id)
+	})
 })
 
 module.exports = { server }

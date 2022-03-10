@@ -13,7 +13,7 @@ router.post('/records', authorization, async (req, res) => {
 })
 
 // 달력 내용 전달
-router.get('/calendar', authorization, async (req, res) => {
+router.get('/myinfo/calendar', authorization, async (req, res) => {
     const { userId } = res.locals.user
 
     // const year = new Date().getFullYear

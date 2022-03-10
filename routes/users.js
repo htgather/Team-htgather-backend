@@ -30,9 +30,10 @@ router.post('/users/auth', async (req, res) => {
 // 회원 정보 수정
 router.patch('/users', authorization, async (req, res) => {
     const { userId } = res.locals.user
-    const { nickName } = req.body
+    const { nickName, weeklyGoal } = req.body
     const existUser = await User.findById(userId)
     existUser.nickName = nickName
+    existUser.weeklyGoal = weeklyGoal
     await existUser.save()
     res.json({ message: '회원정보 수정 성공' })
 })

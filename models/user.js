@@ -8,6 +8,9 @@ const userSchema = new mongoose.Schema(
         snsId: {
             type: Number,
         },
+        weeklyGoal: {
+            type: Number,
+        }
     },
     { timestamps: true }
 )
