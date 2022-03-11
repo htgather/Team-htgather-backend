@@ -4,6 +4,8 @@ const authorization = require('../middlewares/auth-middleware.js')
 const WorkOutTime = require('../models/workOutTime')
 const User = require('../models/user')
 const moment = require('moment')
+const { set } = require('express/lib/application')
+const user = require('../models/user')
 
 // 운동 통계 자료
 router.get('/myinfo/statistics', authorization, async (req, res) => {
@@ -99,6 +101,121 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
         totalTimePerMonth,
         daysInARow,
     })
+})
+
+// 로그인 전
+router.get('/myinfo/anonymous/ranking', async (req, res) => {
+    try {
+        const weekStart = moment().startOf('isoweek').toDate()
+        const weekEnd = moment().endOf('isoweek').toDate()
+        const anonymous = ['홈투게더', 100]
+
+        const users = await User.find({})
+
+        const recordsPerWeek = await WorkOutTime.find({
+            createdAt: {
+                $gte: weekStart,
+                $lte: weekEnd,
+            },
+        })
+        const countUsers = recordsPerWeek.map((x) => x.userId)
+        const usersNickname = users.map((x) => [x.userId,x.nickName])
+        
+        const result = {}
+        countUsers.forEach((x) => {
+            result[x] = (result[x] || 0) + 1
+        })
+        let objcnt = Object.entries(result).sort((a, b) => b[1] - a[1])
+        
+       
+        for(let i=0;i<usersNickname.length;i++){
+           for(let j=0;j<objcnt.length;j++){
+            if(usersNickname[i][0]===objcnt[j][0]){
+                objcnt[j][0]=usersNickname[i][1]
+            }
+           }
+        }
+        // 오늘할거
+        // console.log(countUsers.indexOf(myRankCount))
+       
+
+        let userRankArr = []
+        for (let i = 0; i < 4; i++) {
+            userRankArr.push(objcnt[i])
+        }
+        userRankArr.push(anonymous)
+
+        res.status(200).json({
+            userRankArr,
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(400).json({ message: err.message })
+    }
+})
+
+// 로그인 후
+router.get('/myinfo/ranking', authorization, async (req, res) => {
+    try {
+        const { userId } = res.locals.user
+        const weekStart = moment().startOf('isoweek').toDate()
+        const weekEnd = moment().endOf('isoweek').toDate()
+
+        const users = await User.find({userId})
+        const recordsPerWeek = await WorkOutTime.find({
+            createdAt: {
+                $gte: weekStart,
+                $lte: weekEnd,
+            },
+        })
+        // 본인 랭크 확인
+        const myRank = await WorkOutTime.find({
+            userId,
+            createdAt: {
+                $gte: weekStart,
+                $lte: weekEnd,
+            },
+        })
+
+       
+        // 본인 랭크 확인
+        const myRankCount = myRank.map((x) => x.userId)
+        const myResult = {}
+        myRankCount.forEach((x) => {
+            myResult[x] = (myResult[x] || 0) + 1
+        })
+        let [myobjcnt] = Object.entries(myResult)
+        console.log(myobjcnt)
+        const countUsers = recordsPerWeek.map((x) => x.userId)
+        const usersNickname = users.map((x) => [x.userId,x.nickName])
+        const result = {}
+        countUsers.forEach((x) => {
+            result[x] = (result[x] || 0) + 1
+        })
+        let objcnt = Object.entries(result).sort((a, b) => b[1] - a[1])
+        console.log(objcnt)
+        for(let i=0;i<usersNickname.length;i++){
+            for(let j=0;j<objcnt.length;j++){
+             if(usersNickname[i][0]===objcnt[j][0]){
+                 objcnt[j][0]=usersNickname[i][1]
+                 myobjcnt[0]=usersNickname[i][1]
+             }
+            }
+         }
+
+        let userRankArr = []
+        for (let i = 0; i < 5; i++) {
+            userRankArr.push(objcnt[i])
+        }
+        userRankArr.push(myobjcnt)
+
+        res.status(200).json({
+            userRankArr,
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(400).json({ message: err.message })
+    }
 })
 
 module.exports = router
