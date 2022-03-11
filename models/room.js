@@ -24,7 +24,7 @@ const roomSchema = new mongoose.Schema(
             type: Number,
         },
         videoStartAt: {
-            type: String
+            type: String,
         },
         category: {
             type: String,
@@ -34,6 +34,9 @@ const roomSchema = new mongoose.Schema(
         },
         numberOfPeopleInRoom: {
             type: Number,
+        },
+        isStart: {
+            type: Boolean,
         },
     },
     { timestamps: true }
