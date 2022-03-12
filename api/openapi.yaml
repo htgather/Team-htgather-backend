@@ -14,7 +14,7 @@ servers:
   description: SwaggerHub API Auto Mocking
 - url: http://localhost:4000
   description: workOutAtHome
-- url: http://3.39.58.56:4000
+- url: https://test.kimjeongho-server.com/api-docs
 paths:
   /records:
     post:
