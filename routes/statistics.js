@@ -4,7 +4,6 @@ const authorization = require('../middlewares/auth-middleware.js')
 const WorkOutTime = require('../models/workOutTime')
 const User = require('../models/user')
 const moment = require('moment')
-const { set } = require('express/lib/application')
 const user = require('../models/user')
 
 // 운동 통계 자료
@@ -100,115 +99,101 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
     })
 })
 
-// 로그인 전
-router.get('/myinfo/anonymous/ranking', async (req, res) => {
-    try {
-        const weekStart = moment().startOf('isoweek').toDate()
-        const weekEnd = moment().endOf('isoweek').toDate()
-        const anonymous = ['홈투게더', 100]
-
-        const users = await User.find({})
-
-        const recordsPerWeek = await WorkOutTime.find({
-            createdAt: {
-                $gte: weekStart,
-                $lte: weekEnd,
-            },
-        })
-        const countUsers = recordsPerWeek.map((x) => x.userId)
-        const usersNickname = users.map((x) => [x.userId,x.nickName])
-        
-        const result = {}
-        countUsers.forEach((x) => {
-            result[x] = (result[x] || 0) + 1
-        })
-        let objcnt = Object.entries(result).sort((a, b) => b[1] - a[1])
-        
-       
-        for(let i=0;i<usersNickname.length;i++){
-           for(let j=0;j<objcnt.length;j++){
-            if(usersNickname[i][0]===objcnt[j][0]){
-                objcnt[j][0]=usersNickname[i][1]
-            }
-           }
-        }
-        // 오늘할거
-        // console.log(countUsers.indexOf(myRankCount))
-       
-
-        let userRankArr = []
-        for (let i = 0; i < 4; i++) {
-            userRankArr.push(objcnt[i])
-        }
-        userRankArr.push(anonymous)
-
-        res.status(200).json({
-            userRankArr,
-        })
-    } catch (err) {
-        console.log(err)
-        return res.status(400).json({ message: err.message })
-    }
-})
-
-// 로그인 후
+// 랭킹
 router.get('/myinfo/ranking', authorization, async (req, res) => {
     try {
         const { userId } = res.locals.user
         const weekStart = moment().startOf('isoweek').toDate()
         const weekEnd = moment().endOf('isoweek').toDate()
-
-        const users = await User.find({userId})
+        let isMe = false
+        const users = await User.find({})
+        const zeroCount = await User.findById(userId)
         const recordsPerWeek = await WorkOutTime.find({
             createdAt: {
                 $gte: weekStart,
                 $lte: weekEnd,
             },
         })
-        // 본인 랭크 확인
-        const myRank = await WorkOutTime.find({
-            userId,
-            createdAt: {
-                $gte: weekStart,
-                $lte: weekEnd,
-            },
-        })
-
-       
-        // 본인 랭크 확인
-        const myRankCount = myRank.map((x) => x.userId)
-        const myResult = {}
-        myRankCount.forEach((x) => {
-            myResult[x] = (myResult[x] || 0) + 1
-        })
-        let [myobjcnt] = Object.entries(myResult)
-        console.log(myobjcnt)
         const countUsers = recordsPerWeek.map((x) => x.userId)
-        const usersNickname = users.map((x) => [x.userId,x.nickName])
+        const usersNickname = users.map((x) => [x.userId, x.nickName])
         const result = {}
         countUsers.forEach((x) => {
             result[x] = (result[x] || 0) + 1
         })
+
         let objcnt = Object.entries(result).sort((a, b) => b[1] - a[1])
-        console.log(objcnt)
-        for(let i=0;i<usersNickname.length;i++){
-            for(let j=0;j<objcnt.length;j++){
-             if(usersNickname[i][0]===objcnt[j][0]){
-                 objcnt[j][0]=usersNickname[i][1]
-                 myobjcnt[0]=usersNickname[i][1]
-             }
+
+        // 본인 랭킹 찾기
+        let arrRank = []
+        for (let i = 0; i < objcnt.length; i++) {
+            arrRank.push([i + 1, objcnt[i][0], objcnt[i][1], isMe])
+            if (arrRank[i][1] === userId) {
+                arrRank[i][3] = true
             }
-         }
+        }
+
+        let myRank
+        for (let i = 0; i < arrRank.length; i++) {
+            if (arrRank[i][3] === true) myRank = arrRank[i]
+        }
+
+        // 닉네임 추가
+        for (let i = 0; i < usersNickname.length; i++) {
+            for (let j = 0; j < arrRank.length; j++) {
+                if (usersNickname[i][0] === arrRank[j][1]) {
+                    arrRank[j][1] = usersNickname[i][1]
+                }
+            }
+        }
 
         let userRankArr = []
-        for (let i = 0; i < 5; i++) {
-            userRankArr.push(objcnt[i])
+        for (let i = 0; i < arrRank.length; i++) {
+            if (arrRank[i][0] <= 5) {
+                userRankArr.push(arrRank[i])
+            }
         }
-        userRankArr.push(myobjcnt)
 
-        res.status(200).json({
-            userRankArr,
-        })
+        if (userRankArr.length > 4) {
+            if (
+                userRankArr[0][3] === false &&
+                userRankArr[1][3] === false &&
+                userRankArr[2][3] === false &&
+                userRankArr[3][3] === false &&
+                userRankArr[4][3] === false &&
+                myRank !== undefined
+            ) {
+                userRankArr.pop()
+                userRankArr.push(myRank)
+            } else if (myRank === undefined) {
+                userRankArr.pop()
+                userRankArr.push(['-', `${zeroCount.nickName}`, 0, true])
+            }
+        } else {
+            userRankArr.push(['-', `${zeroCount.nickName}`, 0, true])
+        }
+        
+        let trueCnt=0
+        for(let i=0;i<userRankArr.length;i++){
+            if(userRankArr[i][3]===true){
+                trueCnt++
+            }
+        }
+
+        if(trueCnt>1){
+            userRankArr.pop()
+        }
+
+        const ranking = []
+        for (let i = 0; i < userRankArr.length; i++) {
+            ranking.push({
+                rank: userRankArr[i][0],
+                nickName: userRankArr[i][1],
+                countPerWeek: userRankArr[i][2],
+                isMe: userRankArr[i][3],
+            })
+        }
+
+        res.status(200).json({ ranking })
     } catch (err) {
         console.log(err)
         return res.status(400).json({ message: err.message })
