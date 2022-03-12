@@ -143,6 +143,16 @@ router.get('/rooms', async (req, res) => {
         if (difficulty) {
             rooms = rooms.filter((x) => x.difficulty === difficulty)
         }
+
+        const now = Date.now()
+        rooms = rooms.map((room) => {
+            const createdAt = room.createdAt
+            const videoStartAfter = room.videoStartAfter
+            const videoStart = createdAt.getTime() + videoStartAfter * 60000
+            const isStart = now > videoStart
+            room.isStart = isStart
+            return room
+        })
         res.json({ rooms })
     } catch (err) {
         console.log(err)

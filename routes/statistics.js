@@ -41,7 +41,7 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
     }
 
     const countDictEntries = Object.entries(dict).sort((a, b) => b[1] - a[1])
-    const mostExercised = countDictEntries.slice(0, 2).map((x) => x[0])
+    const mostExercised = countDictEntries.slice(0, 2)
 
     // 이번 달 총 운동 시간
     const monthStart = moment().startOf('month').toDate()

@@ -1,0 +1,381 @@
+openapi: 3.0.0
+info:
+  title: HomeTGater
+  description: ""
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/G-moog/work-out-at-home/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://localhost:4000
+  description: workOutAtHome
+- url: https://test.kimjeongho-server.com/
+paths:
+  /records:
+    post:
+      tags:
+      - details
+      summary: 운동 시간 기록
+      operationId: addWorkOutTimes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/records_body'
+        required: true
+      responses:
+        "201":
+          description: 운동시간 기록 성공
+      security:
+      - oAuth2:
+        - addRooms
+        - addWorkOutTimes
+        - getCalendar
+        - enterRoom
+        - exitRoom
+        - editNickname
+      x-swagger-router-controller: Details
+  /calendar:
+    get:
+      tags:
+      - details
+      summary: 달력 DB 전달
+      operationId: getCalendar
+      responses:
+        "200":
+          description: 운동시간 기록 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "404":
+          description: Not Found.
+      security:
+      - oAuth2:
+        - addRooms
+        - addWorkOutTimes
+        - getCalendar
+        - enterRoom
+        - exitRoom
+        - editNickname
+      x-swagger-router-controller: Details
+  /rooms:
+    post:
+      tags:
+      - rooms
+      summary: 방 만들기
+      operationId: addRooms
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/rooms_body'
+        required: true
+      responses:
+        "201":
+          description: 방 만들기 성공
+        "400":
+          description: "글자수 제한을 초과했거나, 입력값이 제대로 입력되지 않았습니다."
+      security:
+      - oAuth2:
+        - addRooms
+        - addWorkOutTimes
+        - getCalendar
+        - enterRoom
+        - exitRoom
+        - editNickname
+      x-swagger-router-controller: Rooms
+  /rooms/{roomId}:
+    post:
+      tags:
+      - rooms
+      summary: 방 입장
+      operationId: enterRoom
+      parameters:
+      - name: roomId
+        in: path
+        description: 파라미터에서 방 이름을 가져옵니다.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 방 입장 성공
+        "400":
+          description: 방 입장 실패
+      security:
+      - oAuth2:
+        - addRooms
+        - addWorkOutTimes
+        - getCalendar
+        - enterRoom
+        - exitRoom
+        - editNickname
+      x-swagger-router-controller: Rooms
+  /rooms/exit/{roomId}:
+    post:
+      tags:
+      - rooms
+      summary: 방 나가기
+      operationId: exitRoom
+      parameters:
+      - name: roomId
+        in: path
+        description: 파라미터에서 방 이름을 가져옵니다.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 운동 끝!! 사람이 없으면 방이 삭제됐을겁니다
+        "400":
+          description: 방 나가기 실패.
+      security:
+      - oAuth2:
+        - addRooms
+        - addWorkOutTimes
+        - getCalendar
+        - enterRoom
+        - exitRoom
+        - editNickname
+      x-swagger-router-controller: Rooms
+  /rooms/:
+    get:
+      tags:
+      - rooms
+      summary: 방 목록 불러오기
+      operationId: getRoomList
+      parameters:
+      - name: category
+        in: query
+        description: 운동  카테고리
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: difficulty
+        in: query
+        description: 운동  난이도
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 방 목록 잘 보냇습니다.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: 방 목록 보내기 실패.
+      security:
+      - petstore_auth:
+        - write:pets
+        - read:pets
+      x-swagger-router-controller: Rooms
+  /users/auth:
+    post:
+      tags:
+      - users
+      summary: 소셜 로그인
+      operationId: socialLogin
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users_auth_body'
+        required: true
+      responses:
+        "200":
+          description: 소셜 로그인 성공(혹은 회원가입)
+      x-swagger-router-controller: Users
+  /users:
+    post:
+      tags:
+      - users
+      summary: 회원 정보 수정
+      operationId: editNickname
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/users_body'
+        required: true
+      responses:
+        "200":
+          description: 닉네임 변경 성공
+      security:
+      - oAuth2:
+        - addRooms
+        - addWorkOutTimes
+        - getCalendar
+        - enterRoom
+        - exitRoom
+        - editNickname
+      x-swagger-router-controller: Users
+components:
+  schemas:
+    room:
+      type: object
+      properties:
+        _id:
+          type: object
+        creator:
+          type: string
+        roomTitle:
+          type: string
+        videoThumbnail:
+          type: string
+        videoLength:
+          type: number
+          format: int64
+        videoUrl:
+          type: string
+        videoTitle:
+          type: string
+        videoStartAfter:
+          type: number
+          format: int64
+        videoStartAt:
+          type: string
+        category:
+          type: string
+        difficulty:
+          type: string
+        numberOfPeopleInRoom:
+          type: number
+    User:
+      type: object
+      properties:
+        nickName:
+          type: string
+        snsId:
+          type: string
+        createdAt:
+          type: object
+    workOutTime:
+      type: object
+      properties:
+        _id:
+          type: object
+        userId:
+          type: string
+        workOutTime:
+          type: number
+        createdAt:
+          type: object
+    records_body:
+      type: object
+      properties:
+        workOutTime:
+          type: number
+    inline_response_200:
+      type: object
+      properties:
+        dates:
+          type: string
+          example: 2022-03-01T00:00:00.000Z
+      example:
+        dates: 2022-03-01T00:00:00.000Z
+    rooms_body:
+      type: object
+      properties:
+        roomTitle:
+          type: string
+        videoThumbnail:
+          type: string
+        videoLength:
+          type: number
+        videoUrl:
+          type: string
+        videoTitle:
+          type: string
+        videoStarAfter:
+          type: number
+        category:
+          type: string
+        difficulty:
+          type: string
+    inline_response_200_1:
+      type: object
+      properties:
+        _id:
+          type: string
+        creator:
+          type: string
+        roomTitle:
+          type: string
+        videoThumbnail:
+          type: string
+        videoLength:
+          type: string
+        videoUrl:
+          type: string
+        videoTitle:
+          type: string
+        videoStartAfter:
+          type: number
+        videoStartAt:
+          type: string
+        category:
+          type: string
+        difficulty:
+          type: string
+        numberOfPeople:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+      example:
+        videoThumbnail: videoThumbnail
+        creator: creator
+        videoLength: videoLength
+        videoTitle: videoTitle
+        difficulty: difficulty
+        createdAt: createdAt
+        videoUrl: videoUrl
+        _id: _id
+        roomTitle: roomTitle
+        videoStartAfter: 0.80082819046101150206595775671303272247314453125
+        category: category
+        numberOfPeople: numberOfPeople
+        videoStartAt: videoStartAt
+        updatedAt: updatedAt
+    users_auth_body:
+      type: object
+      properties:
+        snsId:
+          type: string
+        nickName:
+          type: string
+    users_body:
+      type: object
+      properties:
+        nickName:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: 소셜 로그인후, 서버에서의 JWT 로그인 방식 시험
+      scheme: bearer
+      #bearerFormat: JWT
+       #   scopes:
+        #    addRooms: 방 만들기
+         #   addWorkOutTimes: 운동시간 등록
+          #  getCalendar: 달력 보내주기
+           # enterRoom: 방 입장
+           # exitRoom: 방 나가기
+           # editNickname: 회원정보수정
