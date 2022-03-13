@@ -36,7 +36,11 @@ router.patch('/users', authorization, async (req, res) => {
     existUser.nickName = nickName
     existUser.weeklyGoal = weeklyGoal
     await existUser.save()
-    res.json({ message: '회원정보 수정 성공' })
+
+    const snsId = existUser.snsId
+
+    const token = jwt.sign({ userId, nickName, snsId, weeklyGoal }, process.env.JWT_KEY)
+    res.json({ token, message: '회원정보 수정 성공' })
 })
 
 module.exports = router
