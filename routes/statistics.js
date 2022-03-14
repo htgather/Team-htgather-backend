@@ -22,7 +22,9 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
         },
     })
 
-    const countPerWeek = recordsPerWeek.length
+    const countPerWeek = new Set(
+        recordsPerWeek.map((x) => x.createdAt.getDay())
+    ).size
 
     const user = await User.findById(userId)
     const weeklyGoal = user.weeklyGoal
