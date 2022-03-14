@@ -102,12 +102,14 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
 // 랭킹
 router.get('/myinfo/ranking', authorization, async (req, res) => {
     try {
+        console.time('start Time') // 평균 30ms
         const { userId } = res.locals.user
         const weekStart = moment().startOf('isoweek').toDate()
         const weekEnd = moment().endOf('isoweek').toDate()
         let isMe = false
         const users = await User.find({})
         const zeroCount = await User.findById(userId)
+        const zeroUser = ['-', `${zeroCount.nickName}`, 0, true]
         const recordsPerWeek = await WorkOutTime.find({
             createdAt: {
                 $gte: weekStart,
@@ -127,9 +129,7 @@ router.get('/myinfo/ranking', authorization, async (req, res) => {
         let arrRank = []
         for (let i = 0; i < objcnt.length; i++) {
             arrRank.push([i + 1, objcnt[i][0], objcnt[i][1], isMe])
-            if (arrRank[i][1] === userId) {
-                arrRank[i][3] = true
-            }
+            if (arrRank[i][1] === userId) arrRank[i][3] = true
         }
 
         let myRank
@@ -140,17 +140,14 @@ router.get('/myinfo/ranking', authorization, async (req, res) => {
         // 닉네임 추가
         for (let i = 0; i < usersNickname.length; i++) {
             for (let j = 0; j < arrRank.length; j++) {
-                if (usersNickname[i][0] === arrRank[j][1]) {
+                if (usersNickname[i][0] === arrRank[j][1])
                     arrRank[j][1] = usersNickname[i][1]
-                }
             }
         }
 
         let userRankArr = []
         for (let i = 0; i < arrRank.length; i++) {
-            if (arrRank[i][0] <= 5) {
-                userRankArr.push(arrRank[i])
-            }
+            if (arrRank[i][0] <= 5) userRankArr.push(arrRank[i])
         }
 
         if (userRankArr.length > 4) {
@@ -166,22 +163,18 @@ router.get('/myinfo/ranking', authorization, async (req, res) => {
                 userRankArr.push(myRank)
             } else if (myRank === undefined) {
                 userRankArr.pop()
-                userRankArr.push(['-', `${zeroCount.nickName}`, 0, true])
+                userRankArr.push(zeroUser)
             }
         } else {
-            userRankArr.push(['-', `${zeroCount.nickName}`, 0, true])
-        }
-        
-        let trueCnt=0
-        for(let i=0;i<userRankArr.length;i++){
-            if(userRankArr[i][3]===true){
-                trueCnt++
-            }
+            userRankArr.push(zeroUser)
         }
 
-        if(trueCnt>1){
-            userRankArr.pop()
+        let trueCnt = 0
+        for (let i = 0; i < userRankArr.length; i++) {
+            if (userRankArr[i][3] === true) trueCnt++
         }
+
+        if (trueCnt > 1) userRankArr.pop()
 
         const ranking = []
         for (let i = 0; i < userRankArr.length; i++) {
@@ -194,6 +187,7 @@ router.get('/myinfo/ranking', authorization, async (req, res) => {
         }
 
         res.status(200).json({ ranking })
+        console.timeEnd('start Time')
     } catch (err) {
         console.log(err)
         return res.status(400).json({ message: err.message })
