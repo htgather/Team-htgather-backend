@@ -121,9 +121,9 @@ io.on('connection', (socket) => {
         }
     })
 
-	socket.on('emoji', () => {
-        console.log(myRoomName)
-		socket.to(myRoomName).emit('emoji', socket.id)
+	socket.on('emoji', (roomNameFromClient) => {
+        console.log(roomNameFromClient)
+		socket.to(roomNameFromClient).emit('emoji', socket.id)
 	})
 })
 
