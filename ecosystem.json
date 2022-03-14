@@ -1,0 +1,9 @@
+{
+    "apps": [
+        {
+            "name": "home-training-together",
+            "script": "./server.js",
+            "watch": true
+        }
+    ]
+}
