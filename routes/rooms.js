@@ -117,7 +117,7 @@ router.post('/rooms/exit/:roomId', authorization, async (req, res) => {
             $inc: { numberOfPeopleInRoom: -1 },
         })
         const existRoom = await Room.findById(roomId)
-        if (!existRoom.numberOfPeopleInRoom) {
+        if (existRoom.numberOfPeopleInRoom <= 0) {
             await Room.findByIdAndRemove(roomId)
             return res.status(200).json({ message: '방 삭제 됨' })
         }
