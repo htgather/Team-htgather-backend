@@ -8,6 +8,6 @@ const DetailController = require('../controllers/detailController')
 router.post('/myinfo/records', authorization, DetailController.TimeRecord.post)
 
 // 달력 내용 전달
-router.get('/myinfo/calendar', authorization,DetailController.Calendar.get)
+router.get('/myinfo/calendar', authorization, DetailController.Calendar.get)
 
 module.exports = router

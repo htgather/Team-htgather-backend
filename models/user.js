@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
         },
         weeklyGoal: {
             type: Number,
-        }
+        },
     },
     { timestamps: true }
 )

@@ -44,7 +44,6 @@ io.on('connection', (socket) => {
                         `${nickname}이 방 ${roomName}에 입장 실패 (정원 초과)`
                     )
                     socket.emit('reject_join')
-                    return
                 }
                 // 방이 존재하면 그 방으로 들어감
                 isRoomExist = true
@@ -121,9 +120,9 @@ io.on('connection', (socket) => {
         }
     })
 
-	socket.on('emoji', (roomNameFromClient, socketIdFromClient) => {
-		socket.to(roomNameFromClient).emit('emoji', socketIdFromClient)
-	})
+    socket.on('emoji', (roomNameFromClient, socketIdFromClient) => {
+        socket.to(roomNameFromClient).emit('emoji', socketIdFromClient)
+    })
 })
 
 module.exports = { server }
