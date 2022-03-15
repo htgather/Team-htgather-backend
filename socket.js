@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
     let myRoomName = null
     let myNickname = null
 
-    socket.on('join_room', (roomName, nickname) => {
+    socket.on('join_room', (roomName, nickname, done) => {
         myRoomName = roomName
         myNickname = nickname
 
@@ -43,7 +43,9 @@ io.on('connection', (socket) => {
                     console.log(
                         `${nickname}이 방 ${roomName}에 입장 실패 (정원 초과)`
                     )
+                    done()
                     socket.emit('reject_join')
+                    return
                 }
                 // 방이 존재하면 그 방으로 들어감
                 isRoomExist = true
