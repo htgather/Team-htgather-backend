@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
             `${nickname}이 방 ${roomName}에 입장 (${targetRoomObj.currentNum}/${MAXIMUM})`
         )
         socket.join(roomName)
-        socket.emit('accept_join', targetRoomObj.users)
+        socket.emit('accept_join', targetRoomObj.users, socket.id)
     })
 
     socket.on('ice', (ice, remoteSocketId) => {
@@ -121,8 +121,8 @@ io.on('connection', (socket) => {
         }
     })
 
-	socket.on('emoji', (roomNameFromClient) => {
-		socket.to(roomNameFromClient).emit('emoji', socket.id)
+	socket.on('emoji', (roomNameFromClient, socketIdFromClient) => {
+		socket.to(roomNameFromClient).emit('emoji', socketIdFromClient)
 	})
 })
 
