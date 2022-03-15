@@ -28,7 +28,7 @@ io.on('connection', (socket) => {
     let myRoomName = null
     let myNickname = null
 
-    socket.on('join_room', (roomName, nickname, done) => {
+    socket.on('join_room', (roomName, nickname) => {
         myRoomName = roomName
         myNickname = nickname
 
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
                     console.log(
                         `${nickname}이 방 ${roomName}에 입장 실패 (정원 초과)`
                     )
-                    done()
+                    socket.emit('accept_join', roomObjArr[i].users, socket.id)
                     socket.emit('reject_join')
                     return
                 }
