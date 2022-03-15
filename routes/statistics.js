@@ -102,7 +102,7 @@ router.get('/myinfo/statistics', authorization, async (req, res) => {
 // 랭킹
 router.get('/myinfo/ranking', authorization, async (req, res) => {
     try {
-        console.time('start Time') // 평균 30ms
+        // console.time('start Time') // 평균 30ms
         const { userId } = res.locals.user
         const weekStart = moment().startOf('isoweek').toDate()
         const weekEnd = moment().endOf('isoweek').toDate()
@@ -187,7 +187,7 @@ router.get('/myinfo/ranking', authorization, async (req, res) => {
         }
 
         res.status(200).json({ ranking })
-        console.timeEnd('start Time')
+        // console.timeEnd('start Time')
     } catch (err) {
         console.log(err)
         return res.status(400).json({ message: err.message })
