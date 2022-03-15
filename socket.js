@@ -122,7 +122,7 @@ io.on('connection', (socket) => {
     })
 
 	socket.on('emoji', (roomNameFromClient, socketIdFromClient) => {
-		socket.to(roomNameFromClient).emit('emoji', socket.id, socketIdFromClient)
+		socket.to(roomNameFromClient).emit('emoji', socketIdFromClient)
 	})
 })
 
