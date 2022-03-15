@@ -43,6 +43,7 @@ io.on('connection', (socket) => {
                     console.log(
                         `${nickname}이 방 ${roomName}에 입장 실패 (정원 초과)`
                     )
+                    roomObjArr[i].currentNum++
                     socket.to(myRoomName).emit('exception')
                     socket.emit('reject_join')
                     return
