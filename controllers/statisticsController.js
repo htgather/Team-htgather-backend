@@ -42,7 +42,27 @@ module.exports = {
             const countDictEntries = Object.entries(dict).sort(
                 (a, b) => b[1] - a[1]
             )
-            const mostExercised = countDictEntries.slice(0, 2)
+
+            const images = {
+                '근력 운동':
+                    'https://www.bodybuilding.com/images/2016/may/how-and-why-to-do-push-ups-tablet-960x540.jpg',
+
+                '유산소 운동':
+                    'https://betterme.world/articles/wp-content/uploads/2020/08/shutterstock_1125657476-scaled.jpg',
+
+                스트레칭:
+                    'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/10/shutterstock_657588133_header-1024x575.jpg?w=1155&h=1528',
+
+                '요가/필라테스':
+                    'https://www.yogabasics.com/yogabasics2017/wp-content/uploads/2021/03/Ashtanga-Yoga.jpeg',
+
+                기타: 'https://ae01.alicdn.com/kf/H3a8bfac042554ceb9512bcbcc6e7967dy/all-koa-acoustic-guitar-koa-acoustic-electric-guitar-handmade-all-real-abalone-classical-acoustic-guitar-free.jpg_Q90.jpg_.webp',
+            }
+
+            const mostExercised = countDictEntries.slice(0, 2).map((x) => {
+                x.push(images[x[0]])
+                return x
+            })
 
             // 이번 달 총 운동 시간
             const monthStart = moment().startOf('month').toDate()
