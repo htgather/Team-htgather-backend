@@ -105,7 +105,6 @@ io.on('connection', (socket) => {
         }
         socket.to(myRoomName).emit('leave_room', socket.id)
 
-        let isRoomEmpty = false
         // 나가면서 방의 정보를 업데이트 해주고 나가기
         for (let i = 0; i < roomObjArr.length; i++) {
             if (roomObjArr[i].roomName === myRoomName) {
@@ -114,32 +113,26 @@ io.on('connection', (socket) => {
                 )
                 roomObjArr[i].users = newUsers
                 roomObjArr[i].currentNum--
-
-                await Room.findByIdAndUpdate(myRoomName, {
-                    $inc: { numberOfPeopleInRoom: -1 },
-                })
-                console.log(
-                    `방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`
-                )
-
-                setTimeout(async () => {
-                    const existRoom = await Room.findById(myRoomName)
-                    if (existRoom?.numberOfPeopleInRoom <= 0) {
-                        await Room.findByIdAndRemove(myRoomName)
-                    }
-                    if (roomObjArr[i].currentNum <= 0) {
-                        isRoomEmpty = true
-                    }
-                }, 10000)
+                break
             }
         }
-        if (isRoomEmpty) {
-            const newRoomObjArr = roomObjArr.filter(
-                (roomObj) => roomObj.currentNum !== 0
-            )
-            roomObjArr = newRoomObjArr
-            console.log(`방 ${myRoomName} 삭제됨`)
-        }
+
+        await Room.findByIdAndUpdate(myRoomName, {
+            $inc: { numberOfPeopleInRoom: -1 },
+        })
+        console.log(`방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`)
+
+        setTimeout(async () => {
+            const existRoom = await Room.findById(myRoomName)
+            if (existRoom?.numberOfPeopleInRoom <= 0) {
+                await Room.findByIdAndRemove(myRoomName)
+                const newRoomObjArr = roomObjArr.filter(
+                    (roomObj) => roomObj.currentNum > 0
+                )
+                roomObjArr = newRoomObjArr
+                console.log(`방 ${myRoomName} 삭제됨`)
+            }
+        }, 10000)
     })
 
     socket.on('emoji', (roomNameFromClient, socketIdFromClient) => {
