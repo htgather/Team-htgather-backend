@@ -118,13 +118,13 @@ io.on('connection', (socket) => {
                 await Room.findByIdAndUpdate(myRoomName, {
                     $inc: { numberOfPeopleInRoom: -1 },
                 })
-                const existRoom = await Room.findById(myRoomName)
-
-                if (existRoom?.numberOfPeopleInRoom <= 0) {
-                    setTimeout(async () => {
+                
+                setTimeout(async () => {
+                    const existRoom = await Room.findById(myRoomName)
+                    if (existRoom?.numberOfPeopleInRoom <= 0) {
                         await Room.findByIdAndRemove(myRoomName)
-                    }, 5000)
-                }
+                    }
+                }, 1000)
 
                 console.log(
                     `방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`
