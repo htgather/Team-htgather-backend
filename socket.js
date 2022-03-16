@@ -105,6 +105,7 @@ io.on('connection', (socket) => {
         }
         socket.to(myRoomName).emit('leave_room', socket.id)
 
+        let currentNum
         // 나가면서 방의 정보를 업데이트 해주고 나가기
         for (let i = 0; i < roomObjArr.length; i++) {
             if (roomObjArr[i].roomName === myRoomName) {
@@ -113,6 +114,7 @@ io.on('connection', (socket) => {
                 )
                 roomObjArr[i].users = newUsers
                 roomObjArr[i].currentNum--
+                currentNum = roomObjArr[i].currentNum
                 break
             }
         }
@@ -120,7 +122,7 @@ io.on('connection', (socket) => {
         await Room.findByIdAndUpdate(myRoomName, {
             $inc: { numberOfPeopleInRoom: -1 },
         })
-        console.log(`방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`)
+        console.log(`방 ${myRoomName} (${currentNum}/${MAXIMUM})`)
 
         setTimeout(async () => {
             const existRoom = await Room.findById(myRoomName)
