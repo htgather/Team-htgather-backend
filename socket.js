@@ -123,9 +123,9 @@ io.on('connection', (socket) => {
                     const existRoom = await Room.findById(myRoomName)
                     if (existRoom?.numberOfPeopleInRoom <= 0) {
                         await Room.findByIdAndRemove(myRoomName)
+                        console.log(`방 ${myRoomName} 삭제됨`)
                     }
-                    console.log(`방 ${myRoomName} 삭제됨`)
-                }, 5000)
+                }, 10000)
 
                 console.log(
                     `방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`
