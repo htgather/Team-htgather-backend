@@ -1,5 +1,6 @@
 const app = require('./app')
 const http = require('http')
+const Room = require('./models/room')
 
 const server = http.createServer(app)
 const io = require('socket.io')(server, {
@@ -28,7 +29,7 @@ io.on('connection', (socket) => {
     let myRoomName = null
     let myNickname = null
 
-    socket.on('join_room', (roomName, nickname) => {
+    socket.on('join_room', async (roomName, nickname) => {
         myRoomName = roomName
         myNickname = nickname
 
@@ -44,6 +45,9 @@ io.on('connection', (socket) => {
                         `${nickname}이 방 ${roomName}에 입장 실패 (정원 초과)`
                     )
                     roomObjArr[i].currentNum++
+                    await Room.findByIdAndUpdate(roomName, {
+                        $inc: { numberOfPeopleInRoom: 1 },
+                    })
                     socket.to(myRoomName).emit('exception')
                     socket.emit('reject_join')
                     return
@@ -72,6 +76,10 @@ io.on('connection', (socket) => {
         })
         targetRoomObj.currentNum++
 
+        await Room.findByIdAndUpdate(roomName, {
+            $inc: { numberOfPeopleInRoom: 1 },
+        })
+
         console.log(
             `${nickname}이 방 ${roomName}에 입장 (${targetRoomObj.currentNum}/${MAXIMUM})`
         )
@@ -91,7 +99,7 @@ io.on('connection', (socket) => {
         socket.to(remoteSocketId).emit('answer', answer, socket.id)
     })
 
-    socket.on('disconnecting', () => {
+    socket.on('disconnecting', async () => {
         if (myNickname && myRoomName) {
             console.log(`${myNickname}이 방 ${myRoomName}에서 퇴장`)
         }
@@ -106,10 +114,19 @@ io.on('connection', (socket) => {
                 )
                 roomObjArr[i].users = newUsers
                 roomObjArr[i].currentNum--
+
+                await Room.findByIdAndUpdate(myRoomName, {
+                    $inc: { numberOfPeopleInRoom: -1 },
+                })
+                const existRoom = await Room.findById(myRoomName)
+                if (existRoom.numberOfPeopleInRoom <= 0) {
+                    await Room.findByIdAndRemove(myRoomName)
+                }
+
                 console.log(
                     `방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`
                 )
-                if (roomObjArr[i].currentNum === 0) {
+                if (roomObjArr[i].currentNum <= 0) {
                     isRoomEmpty = true
                     console.log(`방 ${myRoomName} 삭제됨`)
                 }

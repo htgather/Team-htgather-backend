@@ -99,9 +99,9 @@ module.exports = {
                         message: '입장불가, 5명 초과',
                     })
                 }
-                await Room.findByIdAndUpdate(roomId, {
-                    $inc: { numberOfPeopleInRoom: 1 },
-                })
+                // await Room.findByIdAndUpdate(roomId, {
+                //     $inc: { numberOfPeopleInRoom: 1 },
+                // })
                 return res.status(201).json({ message: '입장 완료' })
             } catch (err) {
                 console.log(err)
