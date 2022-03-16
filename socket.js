@@ -118,21 +118,19 @@ io.on('connection', (socket) => {
                 await Room.findByIdAndUpdate(myRoomName, {
                     $inc: { numberOfPeopleInRoom: -1 },
                 })
+                console.log(
+                    `방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`
+                )
 
                 setTimeout(async () => {
                     const existRoom = await Room.findById(myRoomName)
                     if (existRoom?.numberOfPeopleInRoom <= 0) {
                         await Room.findByIdAndRemove(myRoomName)
-                        console.log(`방 ${myRoomName} 삭제됨`)
+                    }
+                    if (roomObjArr[i].currentNum <= 0) {
+                        isRoomEmpty = true
                     }
                 }, 10000)
-
-                console.log(
-                    `방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`
-                )
-                if (roomObjArr[i].currentNum <= 0) {
-                    isRoomEmpty = true
-                }
             }
         }
         if (isRoomEmpty) {
@@ -140,6 +138,7 @@ io.on('connection', (socket) => {
                 (roomObj) => roomObj.currentNum !== 0
             )
             roomObjArr = newRoomObjArr
+            console.log(`방 ${myRoomName} 삭제됨`)
         }
     })
 
