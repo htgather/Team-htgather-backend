@@ -43,7 +43,7 @@ module.exports = {
                         .status(400)
                         .json({ message: '글자 수 제한을 초과했습니다.' })
                 }
-                const numberOfPeopleInRoom = 1
+                const numberOfPeopleInRoom = 0
 
                 const videoStartAt = moment()
                     .add(videoStartAfter, 'm')
