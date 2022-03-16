@@ -119,8 +119,11 @@ io.on('connection', (socket) => {
                     $inc: { numberOfPeopleInRoom: -1 },
                 })
                 const existRoom = await Room.findById(myRoomName)
+
                 if (existRoom?.numberOfPeopleInRoom <= 0) {
-                    await Room.findByIdAndRemove(myRoomName)
+                    setTimeout(async () => {
+                        await Room.findByIdAndRemove(myRoomName)
+                    }, 5000)
                 }
 
                 console.log(
