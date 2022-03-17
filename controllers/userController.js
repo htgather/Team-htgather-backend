@@ -24,7 +24,8 @@ module.exports = {
 
             const token = jwt.sign(
                 { userId, nickName, snsId, weeklyGoal },
-                process.env.JWT_KEY
+                process.env.JWT_KEY,
+                { expiresIn: '12h' }
             )
             res.json({ token, message: '로그인 성공' })
         },
@@ -42,7 +43,8 @@ module.exports = {
 
             const token = jwt.sign(
                 { userId, nickName, snsId, weeklyGoal },
-                process.env.JWT_KEY
+                process.env.JWT_KEY,
+                { expiresIn: '12h' }
             )
             res.json({ token, message: '회원정보 수정 성공' })
         },

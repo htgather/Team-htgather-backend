@@ -109,25 +109,25 @@ module.exports = {
             }
         },
     },
-    ExitRoom: {
-        post: async (req, res) => {
-            const { roomId } = req.params
-            try {
-                await Room.findByIdAndUpdate(roomId, {
-                    $inc: { numberOfPeopleInRoom: -1 },
-                })
-                const existRoom = await Room.findById(roomId)
-                if (existRoom.numberOfPeopleInRoom <= 0) {
-                    await Room.findByIdAndRemove(roomId)
-                    return res.status(200).json({ message: '방 삭제 됨' })
-                }
-                return res.status(200).json({ message: '운동 끝' })
-            } catch (err) {
-                console.log(err)
-                return res.status(400).json({ message: err.message })
-            }
-        },
-    },
+    // ExitRoom: {
+    //     post: async (req, res) => {
+    //         const { roomId } = req.params
+    //         try {
+    //             await Room.findByIdAndUpdate(roomId, {
+    //                 $inc: { numberOfPeopleInRoom: -1 },
+    //             })
+    //             const existRoom = await Room.findById(roomId)
+    //             if (existRoom.numberOfPeopleInRoom <= 0) {
+    //                 await Room.findByIdAndRemove(roomId)
+    //                 return res.status(200).json({ message: '방 삭제 됨' })
+    //             }
+    //             return res.status(200).json({ message: '운동 끝' })
+    //         } catch (err) {
+    //             console.log(err)
+    //             return res.status(400).json({ message: err.message })
+    //         }
+    //     },
+    // },
     confirmRoom: {
         get: async (req, res) => {
             try {
