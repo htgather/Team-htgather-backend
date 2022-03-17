@@ -113,7 +113,9 @@ io.on('connection', (socket) => {
                 )
                 roomObjArr[i].users = newUsers
                 roomObjArr[i].currentNum--
-                console.log(`방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`)
+                console.log(
+                    `방 ${myRoomName} (${roomObjArr[i].currentNum}/${MAXIMUM})`
+                )
                 break
             }
         }

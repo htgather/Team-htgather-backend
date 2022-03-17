@@ -64,19 +64,19 @@ module.exports = {
                 return x
             })
 
-            // 이번 달 총 운동 시간
-            const monthStart = moment().startOf('month').toDate()
-            const monthEnd = moment().endOf('month').toDate()
+            // 이번 주 총 운동 시간
+            // const monthStart = moment().startOf('month').toDate()
+            // const monthEnd = moment().endOf('month').toDate()
 
-            const recordsPerMonth = await WorkOutTime.find({
-                userId,
-                createdAt: {
-                    $gte: monthStart,
-                    $lte: monthEnd,
-                },
-            })
+            // const recordsPerMonth = await WorkOutTime.find({
+            //     userId,
+            //     createdAt: {
+            //         $gte: monthStart,
+            //         $lte: monthEnd,
+            //     },
+            // })
 
-            const totalTimePerMonth = recordsPerMonth
+            const totalTimePerWeek = recordsPerWeek
                 .map((x) => x.workOutTime)
                 .reduce((a, b) => a + b, 0)
 
@@ -121,7 +121,7 @@ module.exports = {
                 countPerWeek,
                 weeklyGoal,
                 mostExercised,
-                totalTimePerMonth,
+                totalTimePerWeek,
                 daysInARow,
             })
         },
