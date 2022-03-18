@@ -144,6 +144,10 @@ io.on('connection', (socket) => {
     socket.on('screensaver', (roomNameFromClient, socketIdFromClient, check) => {
         socket.to(roomNameFromClient).emit('screensaver', socketIdFromClient, check)
     })
+
+    socket.on('mic_check', (roomNameFromClient, socketIdFromClient, check) => {
+        socket.to(roomNameFromClient).emit('mic_check', socketIdFromClient, check)
+    })
 })
 
 module.exports = { server }
