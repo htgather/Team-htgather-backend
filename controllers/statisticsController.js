@@ -45,18 +45,18 @@ module.exports = {
 
             const images = {
                 '근력 운동':
-                    'https://www.bodybuilding.com/images/2016/may/how-and-why-to-do-push-ups-tablet-960x540.jpg',
+                    'https://user-images.githubusercontent.com/43710866/159020324-a0552667-1ef6-4715-8488-873846f26839.png',
 
                 '유산소 운동':
-                    'https://betterme.world/articles/wp-content/uploads/2020/08/shutterstock_1125657476-scaled.jpg',
+                    'https://user-images.githubusercontent.com/43710866/159020345-157c24de-c788-49fe-974f-15b4cb65079c.png',
 
                 스트레칭:
-                    'https://i0.wp.com/post.medicalnewstoday.com/wp-content/uploads/sites/3/2020/10/shutterstock_657588133_header-1024x575.jpg?w=1155&h=1528',
+                    'https://user-images.githubusercontent.com/43710866/159020340-adb41759-5195-4f0b-982c-3131cb1626b4.png',
 
                 '요가/필라테스':
-                    'https://www.yogabasics.com/yogabasics2017/wp-content/uploads/2021/03/Ashtanga-Yoga.jpeg',
+                    'https://user-images.githubusercontent.com/43710866/159020109-1de7e36d-68bf-4aeb-a098-107983eebca6.png',
 
-                기타: 'https://ae01.alicdn.com/kf/H3a8bfac042554ceb9512bcbcc6e7967dy/all-koa-acoustic-guitar-koa-acoustic-electric-guitar-handmade-all-real-abalone-classical-acoustic-guitar-free.jpg_Q90.jpg_.webp',
+                기타: 'https://user-images.githubusercontent.com/43710866/159020335-0ab82fc9-99bd-44f9-95d6-df327ee5f530.png',
             }
 
             const mostExercised = countDictEntries.slice(0, 2).map((x) => {
