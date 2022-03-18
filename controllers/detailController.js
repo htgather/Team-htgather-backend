@@ -25,9 +25,9 @@ module.exports = {
                 new Set(
                     dates.map(
                         (x) =>
-                            `${x.doneAt.getFullYear()}-${
-                                x.doneAt.getMonth() + 1
-                            }-${x.doneAt.getDate()}`
+                            `${x.createdAt.getFullYear()}-${
+                                x.createdAt.getMonth() + 1
+                            }-${x.createdAt.getDate()}`
                     )
                 )
             )
