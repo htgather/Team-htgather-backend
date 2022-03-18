@@ -140,6 +140,10 @@ io.on('connection', (socket) => {
     socket.on('emoji', (roomNameFromClient, socketIdFromClient) => {
         socket.to(roomNameFromClient).emit('emoji', socketIdFromClient)
     })
+
+    socket.on('screensaver', (roomNameFromClient, socketIdFromClient, check) => {
+        socket.to(roomNameFromClient).emit('screensaver', socketIdFromClient, check)
+    })
 })
 
 module.exports = { server }
