@@ -4,6 +4,7 @@ const chai = require('chai')
 const expect = chai.expect
 const User = require('../models/user')
 const WorkOutTime = require('../models/workOutTime')
+const moment = require('moment')
 let token
 let userId
 
@@ -87,8 +88,35 @@ describe('운동 기록 테스트', () => {
         await WorkOutTime.deleteOne({ userId })
     })
 
-    it('내가 일주일에 몇 일 운동했는지 알 수 있다.', () => {
-        // 가짜 데이터 만들기
-        // 일주일 중 랜덤 날짜 5개
+    it('내가 일주일에 몇 일 운동했는지 알 수 있다.', async () => {
+        // 두 날짜 사이의 랜덤 날짜 생성 함수
+        function randomDate(start, end) {
+            return new Date(
+                start.getTime() +
+                    Math.random() * (end.getTime() - start.getTime())
+            )
+        }
+
+        const weekStart = moment().startOf('isoWeek').toDate()
+
+        // 5개의 랜덤 데이터
+        const recordsDays = []
+        for (let i = 0; i < 5; i++) {
+            const record = await WorkOutTime.create({
+                userId,
+                createdAt: randomDate(weekStart, new Date()),
+            })
+            recordsDays.push(record.createdAt.getDay())
+        }
+
+        const countPerWeek = new Set(recordsDays).size
+
+        const response = await request(app)
+            .get('/myinfo/statistics')
+            .set('Authorization', 'Bearer ' + token)
+
+        await WorkOutTime.deleteMany({ userId })
+        
+        expect(response.body.countPerWeek === countPerWeek).equal(true)
     })
 })
