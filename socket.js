@@ -23,6 +23,9 @@ let roomObjArr = [
     // 	],
     // },
 ]
+
+let mediaStatus = {}
+
 const MAXIMUM = 5
 
 io.on('connection', (socket) => {
@@ -35,6 +38,10 @@ io.on('connection', (socket) => {
 
         let isRoomExist = false
         let targetRoomObj = null
+
+        if (!mediaStatus[roomName]) {
+            mediaStatus[roomName] = {}
+        }
 
         for (let i = 0; i < roomObjArr.length; i++) {
             // 같은 이름의 방 만들 수 없음
@@ -83,7 +90,14 @@ io.on('connection', (socket) => {
         console.log(
             `${nickname}이 방 ${roomName}에 입장 (${targetRoomObj.currentNum}/${MAXIMUM})`
         )
+
+        mediaStatus[roomName][socket.id] = {
+            screensaver: false,
+            muted: false,
+        }
+
         socket.join(roomName)
+        socket.emit('checkCurStatus', mediaStatus[roomName])
         socket.emit('accept_join', targetRoomObj.users, socket.id)
     })
 
@@ -132,6 +146,7 @@ io.on('connection', (socket) => {
                     (roomObj) => roomObj.currentNum > 0
                 )
                 roomObjArr = newRoomObjArr
+                delete mediaStatus[myRoomName]
                 console.log(`방 ${myRoomName} 삭제됨`)
             }
         }, 10000)
@@ -141,12 +156,22 @@ io.on('connection', (socket) => {
         socket.to(roomNameFromClient).emit('emoji', socketIdFromClient)
     })
 
-    socket.on('screensaver', (roomNameFromClient, socketIdFromClient, check) => {
-        socket.to(roomNameFromClient).emit('screensaver', socketIdFromClient, check)
-    })
+    socket.on(
+        'screensaver',
+        (roomNameFromClient, socketIdFromClient, check) => {
+            mediaStatus[roomNameFromClient][socketIdFromClient].screensaver =
+                check
+            socket
+                .to(roomNameFromClient)
+                .emit('screensaver', socketIdFromClient, check)
+        }
+    )
 
     socket.on('mic_check', (roomNameFromClient, socketIdFromClient, check) => {
-        socket.to(roomNameFromClient).emit('mic_check', socketIdFromClient, check)
+        mediaStatus[roomNameFromClient][socketIdFromClient].muted = check
+        socket
+            .to(roomNameFromClient)
+            .emit('mic_check', socketIdFromClient, check)
     })
 })
 
