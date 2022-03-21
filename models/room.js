@@ -38,6 +38,9 @@ const roomSchema = new mongoose.Schema(
         isStart: {
             type: Boolean,
         },
+        password: {
+            type: String,
+        },
     },
     { timestamps: true }
 )

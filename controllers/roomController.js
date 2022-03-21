@@ -19,6 +19,7 @@ module.exports = {
                     videoStartAfter,
                     category,
                     difficulty,
+                    password
                 } = req.body
 
                 if (
@@ -62,6 +63,7 @@ module.exports = {
                     category,
                     difficulty,
                     numberOfPeopleInRoom,
+                    password
                 })
 
                 res.status(201).json({ roomInfo })
