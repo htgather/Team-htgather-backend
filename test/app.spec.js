@@ -56,6 +56,13 @@ describe('유저 정보 테스트', async () => {
     })
 })
 
+// 두 날짜 사이의 랜덤 날짜 생성 함수
+function randomDate(start, end) {
+    return new Date(
+        start.getTime() + Math.random() * (end.getTime() - start.getTime())
+    )
+}
+
 describe('운동 기록 테스트', () => {
     beforeEach(async () => {
         const response = await request(app).post('/users/auth').send({
@@ -69,6 +76,7 @@ describe('운동 기록 테스트', () => {
 
     afterEach(async () => {
         await User.deleteOne({ snsId: 123 })
+        await WorkOutTime.deleteMany({ userId })
         token = undefined
         userId = undefined
     })
@@ -85,18 +93,9 @@ describe('운동 기록 테스트', () => {
         const oneRecord = await WorkOutTime.findOne({ userId })
         expect(oneRecord.workOutTime).equal(30)
         expect(oneRecord.category).equal('요가')
-        await WorkOutTime.deleteOne({ userId })
     })
 
     it('내가 일주일에 몇 일 운동했는지 알 수 있다.', async () => {
-        // 두 날짜 사이의 랜덤 날짜 생성 함수
-        function randomDate(start, end) {
-            return new Date(
-                start.getTime() +
-                    Math.random() * (end.getTime() - start.getTime())
-            )
-        }
-
         const weekStart = moment().startOf('isoWeek').toDate()
 
         // 5개의 랜덤 데이터
@@ -115,8 +114,113 @@ describe('운동 기록 테스트', () => {
             .get('/myinfo/statistics')
             .set('Authorization', 'Bearer ' + token)
 
-        await WorkOutTime.deleteMany({ userId })
-        
+        expect(response.status).equal(200)
         expect(response.body.countPerWeek === countPerWeek).equal(true)
+    })
+
+    it('내가 가장 많이 한 2개 이하의 운동 카테고리 이름, 횟수, 이미지 url을 불러올 수 있다.', async () => {
+        await WorkOutTime.create({ userId, category: '근력 운동' })
+        await WorkOutTime.create({ userId, category: '근력 운동' })
+        await WorkOutTime.create({ userId, category: '근력 운동' })
+        await WorkOutTime.create({ userId, category: '유산소 운동' })
+        await WorkOutTime.create({ userId, category: '유산소 운동' })
+        await WorkOutTime.create({ userId, category: '요가/필라테스' })
+
+        const response = await request(app)
+            .get('/myinfo/statistics')
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.status).equal(200)
+        expect(response.body.mostExercised.map((x) => x[0])[0]).equal(
+            '근력 운동'
+        )
+        expect(response.body.mostExercised.map((x) => x[0])[1]).equal(
+            '유산소 운동'
+        )
+    })
+
+    it('내가 이번 주에 한 총 운동 시간을 알 수 있다.', async () => {
+        const weekStart = moment().startOf('isoWeek').toDate()
+
+        for (let i = 0; i < 5; i++) {
+            await WorkOutTime.create({
+                userId,
+                workOutTime: 30,
+                createdAt: randomDate(weekStart, new Date()),
+            })
+        }
+
+        const response = await request(app)
+            .get('/myinfo/statistics')
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.status).equal(200)
+        expect(response.body.totalTimePerWeek).equal(150)
+    })
+
+    it('오늘 운동하지 않은 경우 내가 연속으로 몇 일 운동했는지 알 수 있다.', async () => {
+        for (let day = 1; day <= 4; day++) {
+            const pastStart = moment()
+                .startOf('day')
+                .subtract(day, 'days')
+                .toDate()
+            const pastEnd = moment().endOf('day').subtract(day, 'days').toDate()
+            await WorkOutTime.create({
+                userId,
+                createdAt: randomDate(pastStart, pastEnd),
+            })
+        }
+
+        const response = await request(app)
+            .get('/myinfo/statistics')
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.status).equal(200)
+        expect(response.body.daysInARow).equal(4)
+    })
+
+    it('오늘 운동한 경우 내가 연속으로 몇 일 운동했는지 알 수 있다.', async () => {
+        for (let day = 0; day <= 4; day++) {
+            const pastStart = moment()
+                .startOf('day')
+                .subtract(day, 'days')
+                .toDate()
+            const pastEnd = moment().endOf('day').subtract(day, 'days').toDate()
+            await WorkOutTime.create({
+                userId,
+                createdAt: randomDate(pastStart, pastEnd),
+            })
+        }
+
+        const response = await request(app)
+            .get('/myinfo/statistics')
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.status).equal(200)
+        expect(response.body.daysInARow).equal(5)
+    })
+
+    it('내 기록을 포함한 랭킹 목록을 불러올 수 있다.', async () => {
+        const response = await request(app)
+            .get('/myinfo/ranking')
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.status).equal(200)
+        expect(
+            response.body.ranking.filter((x) => x.isMe === true).length > 0
+        ).equal(true)
+    })
+
+    it('달력 API 요청 시 내가 운동한 날짜들로 이루어진 array를 받는다.', async () => {
+        await WorkOutTime.create({ userId, createdAt: new Date('2022-02-22') })
+        await WorkOutTime.create({ userId, createdAt: new Date('2022-01-19') })
+        await WorkOutTime.create({ userId, createdAt: new Date('2022-03-05') })
+
+        const response = await request(app)
+            .get('/myinfo/calendar')
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.status).equal(200)
+        expect(response.body.dates).eql(['2022-2-22', '2022-1-19', '2022-3-5'])
     })
 })
