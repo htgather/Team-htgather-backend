@@ -4,6 +4,7 @@ const chai = require('chai')
 const expect = chai.expect
 const User = require('../models/user')
 const WorkOutTime = require('../models/workOutTime')
+const Room = require('../models/room')
 const moment = require('moment')
 let token
 let userId
@@ -222,5 +223,171 @@ describe('운동 기록 테스트', () => {
 
         expect(response.status).equal(200)
         expect(response.body.dates).eql(['2022-2-22', '2022-1-19', '2022-3-5'])
+    })
+})
+
+describe('운동 방 테스트', async () => {
+    beforeEach(async () => {
+        const response = await request(app).post('/users/auth').send({
+            snsId: 123,
+            nickName: 'abc',
+        })
+        token = response.body.token
+        const existUser = await User.findOne({ snsId: 123 })
+        userId = existUser.userId
+    })
+
+    afterEach(async () => {
+        await User.deleteOne({ snsId: 123 })
+        await Room.deleteMany({ creator: 'abc' })
+        token = undefined
+        userId = undefined
+    })
+
+    it('필수 데이터를 모두 입력하면 방이 생성된다.', async () => {
+        const response = await request(app)
+            .post('/rooms')
+            .set('Authorization', 'Bearer ' + token)
+            .send({
+                roomTitle: '방 제목',
+                videoThumbnail: '썸네일 url',
+                videoLength: 30,
+                videoUrl: '비디오 url',
+                videoTitle: '비디오 제목',
+                videoStartAfter: 1,
+                category: '근력 운동',
+                difficulty: '고급',
+            })
+        expect(response.status).equal(201)
+    })
+
+    it('필수 데이터를 모두 입력하지 않으면 방이 생성되지 않는다.', async () => {
+        const response = await request(app)
+            .post('/rooms')
+            .set('Authorization', 'Bearer ' + token)
+            .send({
+                videoThumbnail: '썸네일 url',
+                videoLength: 30,
+                videoUrl: '비디오 url',
+                videoTitle: '비디오 제목',
+                videoStartAfter: 1,
+                category: '근력 운동',
+                difficulty: '고급',
+            })
+        expect(response.status).equal(400)
+    })
+
+    it('해당하는 방이 DB에 있으면 입장할 수 있다.', async () => {
+        const newRoom = await Room.create({ creator: 'abc' })
+        const roomId = newRoom.roomId
+
+        const response = await request(app)
+            .post(`/rooms/${roomId}`)
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.status).equal(201)
+    })
+
+    it('이미 운동이 시작된 방에는 입장할 수 없다.', async () => {
+        const newRoom = await Room.create({
+            creator: 'abc',
+            createdAt: moment().subtract(30, 'minutes').toDate(),
+            videoStartAfter: 10,
+        })
+        const roomId = newRoom.roomId
+
+        const response = await request(app)
+            .post(`/rooms/${roomId}`)
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.body.message).equal('이미 운동이 시작되었습니다.')
+    })
+
+    it('5명 이상이 있는 방에는 입장할 수 없다.', async () => {
+        const newRoom = await Room.create({
+            creator: 'abc',
+            numberOfPeopleInRoom: 5,
+        })
+        const roomId = newRoom.roomId
+
+        const response = await request(app)
+            .post(`/rooms/${roomId}`)
+            .set('Authorization', 'Bearer ' + token)
+
+        expect(response.body.message).equal('입장불가, 5명 초과')
+    })
+
+    it('카테고리와 difficulty에 따라 방 목록을 불러온다.', async () => {
+        await Room.create({
+            creator: 'abc',
+            category: '카테고리A',
+            difficulty: '난이도A',
+        })
+        await Room.create({
+            creator: 'abc',
+            category: '카테고리B',
+            difficulty: '난이도B',
+        })
+        await Room.create({
+            creator: 'abc',
+            category: '카테고리B',
+            difficulty: '난이도A',
+        })
+        await Room.create({
+            creator: 'abc',
+            category: '카테고리A',
+            difficulty: '난이도B',
+        })
+        const responseAll = await request(app).get('/rooms')
+        const responseCategory = await request(app)
+            .get('/rooms')
+            .query({ category: '카테고리A' })
+        const responseDifficulty = await request(app)
+            .get('/rooms')
+            .query({ difficulty: '난이도A' })
+
+        expect(
+            responseAll.body.rooms.filter((x) => x.creator === 'abc').length
+        ).equal(4)
+        expect(
+            Array.from(
+                new Set(responseCategory.body.rooms.map((x) => x.category))
+            )[0]
+        ).equal('카테고리A')
+        expect(
+            Array.from(
+                new Set(responseDifficulty.body.rooms.map((x) => x.difficulty))
+            )[0]
+        ).equal('난이도A')
+    })
+
+    it('이미 운동이 시작된 방의 isStart는 true, 아직 시작하지 않은 방의 isStart는 false이다.', async () => {
+        await Room.create({
+            creator: 'abc',
+            roomTitle: '이미 운동이 시작된 방',
+            createdAt: moment().subtract(30, 'minutes').toDate(),
+            videoStartAfter: 10,
+        })
+        await Room.create({
+            creator: 'abc',
+            roomTitle: '아직 시작하지 않은 방',
+            createdAt: moment().subtract(30, 'minutes').toDate(),
+            videoStartAfter: 40,
+        })
+        const response = await request(app).get('/rooms')
+        expect(
+            response.body.rooms.filter(
+                (x) =>
+                    x.creator === 'abc' &&
+                    x.roomTitle === '이미 운동이 시작된 방'
+            )[0].isStart
+        ).equal(true)
+        expect(
+            response.body.rooms.filter(
+                (x) =>
+                    x.creator === 'abc' &&
+                    x.roomTitle === '아직 시작하지 않은 방'
+            )[0].isStart
+        ).equal(false)
     })
 })
