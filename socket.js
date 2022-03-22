@@ -114,7 +114,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnecting', async () => {
-        delete mediaStatus[myRoomName][socket.id]
+        // delete mediaStatus[myRoomName][socket.id]
         if (myNickname && myRoomName) {
             console.log(`${myNickname}이 방 ${myRoomName}에서 퇴장`)
         }
