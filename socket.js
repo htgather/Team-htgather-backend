@@ -161,7 +161,7 @@ io.on('connection', (socket) => {
         'screensaver',
         (roomNameFromClient, socketIdFromClient, check) => {
             if (!mediaStatus[roomNameFromClient][socketIdFromClient]) {
-                mediaStatus[roomNameFromClient][socketIdFromClient] = null
+                mediaStatus[roomNameFromClient][socketIdFromClient] = {}
             }
             mediaStatus[roomNameFromClient][socketIdFromClient].screensaver =
                 check
@@ -173,7 +173,7 @@ io.on('connection', (socket) => {
 
     socket.on('mic_check', (roomNameFromClient, socketIdFromClient, check) => {
         if (!mediaStatus[roomNameFromClient][socketIdFromClient]) {
-            mediaStatus[roomNameFromClient][socketIdFromClient] = null
+            mediaStatus[roomNameFromClient][socketIdFromClient] = {}
         }
         mediaStatus[roomNameFromClient][socketIdFromClient].muted = check
         socket
