@@ -180,6 +180,10 @@ io.on('connection', (socket) => {
             .to(roomNameFromClient)
             .emit('mic_check', socketIdFromClient, check)
     })
+
+    socket.on('sendYoutubeTime', (time) => {
+        socket.emit('sendYoutubeTime', time)
+    })
 })
 
 module.exports = { server }
