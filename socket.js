@@ -182,6 +182,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('sendYoutubeTime', (time) => {
+        console.log(time)
         socket.emit('sendYoutubeTime', time)
     })
 })
