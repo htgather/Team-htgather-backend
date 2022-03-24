@@ -11,6 +11,7 @@ module.exports = {
         "ecmaVersion": "latest"
     },
     "rules": {
-        "no-constant-condition": ["error", { "checkLoops": false }]
+        "no-constant-condition": ["error", { "checkLoops": false }],
+        "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
     }
 }
