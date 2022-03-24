@@ -1,7 +1,8 @@
 {
     "scripts": {
         "test": "mocha --exit",
-        "prettify": "prettier --write *.js **/*.js"
+        "prettify": "prettier --write *.js **/*.js",
+        "lint": "eslint ."
     },
     "dependencies": {
         "cors": "^2.8.5",
@@ -16,9 +17,12 @@
     },
     "devDependencies": {
         "chai": "^4.3.6",
+        "eslint": "^8.11.0",
+        "eslint-config-airbnb": "^19.0.4",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.0.0",
         "mocha": "^9.2.2",
         "prettier": "^2.5.1",
-        "sinon": "^13.0.1",
         "supertest": "^6.2.2"
     }
 }

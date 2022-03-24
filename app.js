@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 app.use(routers)
 
 // 클라이언트에 error 내용 전송
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     res.status(400).send({ errorMessage: err })
 })
 

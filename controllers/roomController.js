@@ -1,5 +1,4 @@
 const Room = require('../models/room')
-const User = require('../models/user')
 const moment = require('moment')
 moment.locale('ko')
 
