@@ -34,3 +34,5 @@ mediaStatus[roomNameFromClient][socketIdFromClient1].muted = check1
 // delete mediaStatus[roomNameFromClient]
 
 console.log(mediaStatus)
+
+// build test

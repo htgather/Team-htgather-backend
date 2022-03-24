@@ -12,7 +12,7 @@ let userId
 describe('유저 정보 테스트', async () => {
     afterEach(async () => {
         await User.deleteOne({ snsId: 123 })
-        token = undefined
+        token = null
     })
 
     it('snsId와 nickName을 입력하고, DB에 snsId에 해당하는 회원이 없으면 회원가입한다.', async () => {
@@ -78,8 +78,8 @@ describe('운동 기록 테스트', () => {
     afterEach(async () => {
         await User.deleteOne({ snsId: 123 })
         await WorkOutTime.deleteMany({ userId })
-        token = undefined
-        userId = undefined
+        token = null
+        userId = null
     })
 
     it('운동 기록에는 userId, workOutTime, category가 기록된다.', async () => {
@@ -240,8 +240,8 @@ describe('운동 방 테스트', async () => {
     afterEach(async () => {
         await User.deleteOne({ snsId: 123 })
         await Room.deleteMany({ creator: 'abc' })
-        token = undefined
-        userId = undefined
+        token = null
+        userId = null
     })
 
     it('필수 데이터를 모두 입력하면 방이 생성된다.', async () => {
