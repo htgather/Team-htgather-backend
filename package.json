@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "test": "mocha",
+        "test": "mocha --exit",
         "prettify": "prettier --write *.js **/*.js"
     },
     "dependencies": {
