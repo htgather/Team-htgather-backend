@@ -11,6 +11,9 @@ const workOutTimeSchema = new mongoose.Schema(
         category: {
             type: String,
         },
+        videoUrl: {
+            type: String,
+        },
     },
     { timestamps: true }
 )

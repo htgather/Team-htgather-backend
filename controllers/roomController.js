@@ -1,4 +1,5 @@
 const Room = require('../models/room')
+const WorkOutTime = require('../models/workOutTime')
 const moment = require('moment')
 moment.locale('ko')
 
@@ -18,7 +19,7 @@ module.exports = {
                     videoStartAfter,
                     category,
                     difficulty,
-                    password
+                    password,
                 } = req.body
 
                 if (
@@ -62,7 +63,7 @@ module.exports = {
                     category,
                     difficulty,
                     numberOfPeopleInRoom,
-                    password
+                    password,
                 })
 
                 res.status(201).json({ roomInfo })
@@ -160,6 +161,31 @@ module.exports = {
                 console.log(err)
                 return res.status(400).json({ message: err.message })
             }
+        },
+    },
+    suggestRoom: {
+        get: async (req, res) => {
+            const { userId } = res.locals.user
+            const myRecord = await WorkOutTime.findOne({ userId }).sort({
+                createdAt: -1,
+            })
+            const recentUrl = myRecord.videoUrl
+
+            const records = await WorkOutTime.find({})
+            const count = records
+                .map((x) => x.videoUrl)
+                .reduce((count, url) => {
+                    if (url) {
+                        count[url] ? count[url]++ : (count[url] = 1)
+                    }
+                    return count
+                }, {})
+            const bestUrls = Object.entries(count)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 3)
+                .map((x) => x[0])
+
+            res.json({ recentUrl, bestUrls })
         },
     },
 }

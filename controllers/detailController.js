@@ -4,8 +4,8 @@ module.exports = {
     TimeRecord: {
         post: async (req, res) => {
             const { userId } = res.locals.user
-            const { workOutTime, category } = req.body
-            await WorkOutTime.create({ userId, workOutTime, category })
+            const { workOutTime, category, videoUrl } = req.body
+            await WorkOutTime.create({ userId, workOutTime, category, videoUrl })
 
             res.json({ message: '운동시간 기록 성공' })
         },
