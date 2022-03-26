@@ -97,8 +97,8 @@ io.on('connection', (socket) => {
         }
 
         socket.join(roomName)
-        socket.emit('checkCurStatus', mediaStatus[roomName])
         socket.emit('accept_join', targetRoomObj.users, socket.id)
+        socket.emit('checkCurStatus', mediaStatus[roomName])
     })
 
     socket.on('ice', (ice, remoteSocketId) => {
