@@ -1,37 +1,15 @@
-let mediaStatus = {
-    // roomname: {
-    //     abc123: {
-    //         screensaver: null,
-    //         muted: null,
-    //     },
-    // },
-}
+const records = []
+const count = records
+    .map((x) => x.videoUrl)
+    .reduce((count, url) => {
+        if (url) {
+            count[url] ? count[url]++ : (count[url] = 1)
+        }
+        return count
+    }, {})
+const bestUrls = Object.entries(count)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .map((x) => x[0])
 
-const roomNameFromClient = 'roomname'
-const socketIdFromClient1 = 'abc123'
-const socketIdFromClient2 = 'cde456'
-const check1 = true
-
-// mediaStatus[roomNameFromClient][socketIdFromClient]['screensaver'] = check
-
-if (!mediaStatus[roomNameFromClient]) {
-    mediaStatus[roomNameFromClient] = {}
-}
-
-mediaStatus[roomNameFromClient][socketIdFromClient1] = {
-    screensaver: false,
-    muted: false,
-}
-
-mediaStatus[roomNameFromClient][socketIdFromClient2] = {
-    screensaver: false,
-    muted: false,
-}
-
-mediaStatus[roomNameFromClient][socketIdFromClient1].muted = check1
-
-// delete mediaStatus[roomNameFromClient]
-
-console.log(mediaStatus)
-
-// build TEST
+console.log(bestUrls)

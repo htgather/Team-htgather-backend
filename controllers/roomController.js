@@ -169,7 +169,12 @@ module.exports = {
             const myRecord = await WorkOutTime.findOne({ userId }).sort({
                 createdAt: -1,
             })
-            const recentUrl = myRecord.videoUrl
+            let recentUrl
+            if (!myRecord) {
+                recentUrl = ''
+            } else {
+                recentUrl = myRecord.videoUrl
+            }
 
             const records = await WorkOutTime.find({})
             const count = records
