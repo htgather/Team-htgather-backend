@@ -48,7 +48,8 @@
 2. 아키텍처   
 
 
-![서비스 아키텍처 (1)](https://user-images.githubusercontent.com/92852591/160615465-37a61fd6-1615-4832-b9c7-8992aa796b08.png)
+
+![서비스 아키텍처 (2)](https://user-images.githubusercontent.com/92852591/160626467-298a904c-2433-41a1-a804-66999afd356a.png)
 
 
 ## 📌 팀원소개
