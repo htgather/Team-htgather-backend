@@ -3,9 +3,9 @@
 # 홈트게더
 ![홈트게더 로고 1](https://user-images.githubusercontent.com/92852591/160459210-c55230bb-2107-4b12-acaa-a0d04ece8079.png)
 
-[사진]---로고 사진? 대문 사진?
 
-기술 스택들 나열
+
+##사용한 기술 스택들
 (노드, 몽고 버전 수정 필요)
 <p align='center'>
   <img src='https://img.shields.io/badge/Node-version1111-green?logo=Node.js'/>
