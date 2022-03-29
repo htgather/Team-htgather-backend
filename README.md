@@ -53,14 +53,15 @@
 
 ## 📌 팀원소개
 ### 프론트엔드
-- FrontEnd github : https://github.com/HANG-Project/HANG-BackEnd
-- 박상원 : https://github.com/dltmdrbtjd
-- 고주열 : https://github.com/HseongH
-- 이규리 : https://github.com/HseongH
+- FrontEnd github : https://github.com/wkqkel/work-out-at-home-FE
+- 박상원 : https://github.com/
+- 고주열 : https://github.com/
+- 이규리 : https://github.com/
 ### 백엔드
-- BackEnd github : https://github.com/HANG-Project/HANG-BackEnd
-- 고수진 : https://github.com/soujinko
-- 변정섭 : https://github.com/BJS-kr
+- BackEnd github : https://github.com/fancyers/work-out-at-home-BE
+- 김정호 : https://github.com/fancyers
+- 강경묵 : https://github.com/naho199345
+- 김승호 : https://github.com/G-moog
 ### 디자이너
 - 강수빈 : 디자!
 - 추성열 : 이너!
