@@ -17,7 +17,11 @@
   <img src='https://img.shields.io/badge/chai-v4.3.6-red?logo=chai'/>
   <img src='https://img.shields.io/badge/swagger-API-brightgreen?logo=swagger'/>
   <img src='https://img.shields.io/badge/eslint-v8.11.0-purple?logo=eslint'/>
-  
+  <img src='https://img.shields.io/badge/Buffer-v6.0.3-white?logo=Buffer'/>
+  <img src='https://img.shields.io/badge/React-v17.0.2-blue?logo=React'/>
+  <img src='https://img.shields.io/badge/Redux-v4.1.2-purple?logo=Redux'/>
+  <img src='https://img.shields.io/badge/styled_components-v5.3.3-black?logo=styled_-_components'/>
+  <img src='https://img.shields.io/badge/axios-v0.26.0-purple?logo=styled_-_components'/>
 </p>
 
 
