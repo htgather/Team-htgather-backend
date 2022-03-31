@@ -5,6 +5,9 @@ const workOutTimeSchema = new mongoose.Schema(
         userId: {
             type: String,
         },
+        nickName: {
+            type: String,
+        },
         workOutTime: {
             type: Number,
         },
