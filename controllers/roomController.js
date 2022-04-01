@@ -1,4 +1,5 @@
 const Room = require('../models/room')
+const RoomHistory = require('../models/room-history')
 const WorkOutTime = require('../models/workOutTime')
 const moment = require('moment')
 moment.locale('ko')
@@ -64,6 +65,20 @@ module.exports = {
                     difficulty,
                     numberOfPeopleInRoom,
                     password,
+                })
+
+                await RoomHistory.create({
+                    roomId: roomInfo.roomId,
+                    creator,
+                    roomTitle,
+                    videoTitle,
+                    videoLength,
+                    videoStartAfter,
+                    category,
+                    difficulty,
+                    maxPeopleNumber: 1,
+                    secret: password ? true : false,
+                    completed: false,
                 })
 
                 res.status(201).json({ roomInfo })

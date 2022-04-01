@@ -1,11 +1,16 @@
 const WorkOutTime = require('../models/workOutTime')
+const RoomHistory = require('../models/room-history')
 
 module.exports = {
     TimeRecord: {
         post: async (req, res) => {
             const { userId, nickName } = res.locals.user
-            const { workOutTime, category, videoUrl } = req.body
+            const { workOutTime, category, videoUrl, roomId } = req.body
             await WorkOutTime.create({ userId, nickName, workOutTime, category, videoUrl })
+
+            const roomHistory = await RoomHistory.findOne({ roomId })
+            roomHistory.completed = true
+            roomHistory.save()
 
             res.json({ message: '운동시간 기록 성공' })
         },

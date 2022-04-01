@@ -1,6 +1,7 @@
 const app = require('./app')
 const http = require('http')
 const Room = require('./models/room')
+const RoomHistory = require('./models/room-history')
 
 const server = http.createServer(app)
 const io = require('socket.io')(server, {
@@ -27,6 +28,16 @@ let roomObjArr = [
 let mediaStatus = {}
 
 const MAXIMUM = 5
+
+const roomHistoryUpdate = async (roomId) => {
+    const room = await Room.findById(roomId)
+    const numberOfPeopleInRoom = room.numberOfPeopleInRoom
+    const roomHistory = await RoomHistory.findOne({ roomId })
+    if (numberOfPeopleInRoom > roomHistory.maxPeopleNumber) {
+        roomHistory.maxPeopleNumber = numberOfPeopleInRoom
+    }
+    await roomHistory.save()
+}
 
 io.on('connection', (socket) => {
     let myRoomName = null
@@ -55,6 +66,7 @@ io.on('connection', (socket) => {
                     await Room.findByIdAndUpdate(roomName, {
                         $inc: { numberOfPeopleInRoom: 1 },
                     })
+                    await roomHistoryUpdate(roomName)
                     socket.to(myRoomName).emit('exception')
                     socket.emit('reject_join')
                     return
@@ -86,6 +98,7 @@ io.on('connection', (socket) => {
         await Room.findByIdAndUpdate(roomName, {
             $inc: { numberOfPeopleInRoom: 1 },
         })
+        await roomHistoryUpdate(roomName)
 
         console.log(
             `${nickname}이 방 ${roomName}에 입장 (${targetRoomObj.currentNum}/${MAXIMUM})`
@@ -143,6 +156,11 @@ io.on('connection', (socket) => {
             const existRoom = await Room.findById(myRoomName)
             if (existRoom?.numberOfPeopleInRoom <= 0) {
                 await Room.findByIdAndRemove(myRoomName)
+
+                const roomHistory = await RoomHistory.findOne({roomId:myRoomName})
+                roomHistory.deletedAt = new Date()
+                await roomHistory.save()
+                
                 const newRoomObjArr = roomObjArr.filter(
                     (roomObj) => roomObj.currentNum > 0
                 )
