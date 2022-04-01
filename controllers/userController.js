@@ -19,6 +19,8 @@ module.exports = {
             }
 
             nickName = user.nickName
+            console.log(`${nickName} 로그인 또는 회원가입`)
+
             const userId = user.userId
             const weeklyGoal = user.weeklyGoal
 
