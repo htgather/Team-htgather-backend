@@ -47,17 +47,18 @@
 
 2. 아키텍처   
 
+![서비스 아키텍처 (5)](https://user-images.githubusercontent.com/92852591/161378779-8562517a-1e8b-45e5-93dc-28bbcb2743fe.png)
 
 
-![서비스 아키텍처 (2)](https://user-images.githubusercontent.com/92852591/160626467-298a904c-2433-41a1-a804-66999afd356a.png)
+
 
 
 ## 📌 팀원소개
 ### 프론트엔드
 - FrontEnd github : https://github.com/wkqkel/work-out-at-home-FE
-- 박상원 : https://github.com/
-- 고주열 : https://github.com/
-- 이규리 : https://github.com/
+- 박상원 : https://github.com/wkqkel
+- 고주열 : https://github.com/Noah8922
+- 이규리 : https://github.com/degurrrrrr
 ### 백엔드
 - BackEnd github : https://github.com/fancyers/work-out-at-home-BE
 - 김정호 : https://github.com/fancyers
