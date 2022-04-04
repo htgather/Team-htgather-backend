@@ -61,6 +61,7 @@
 3. API 명세서
 ![화면 캡처 2022-04-04 105832](https://user-images.githubusercontent.com/92852591/161462890-6f20ed25-a5e4-4f83-b56b-93e6b5ebd800.png)
 ![swagger](https://user-images.githubusercontent.com/92852591/161462896-dc3e8280-65a4-43e5-91f6-700b76c0fc11.png)
+![swagger](https://user-images.githubusercontent.com/92852591/161463082-1570cccf-17db-4f7c-9d53-68946d19e7ab.png)
 
 
 
