@@ -8,6 +8,15 @@
 ##사용한 기술 스택들
 (노드, 몽고 버전 수정 필요)
 <p align='center'>
+  <img src="https://img.shields.io/badge/Node-42443b?style=for-the-badge&logo=Node.js&logoColor=green">
+  <img src="https://img.shields.io/badge/Express-7b7b7b?style=for-the-badge&logo=Express&logoColor=black">
+  <img src="https://img.shields.io/badge/MongoDB-3e2d1d?style=for-the-badge&logo=MongoDB&logoColor=green">
+  <img src="https://img.shields.io/badge/Socket.io-ffffff?style=for-the-badge&logo=Socket.io&logoColor=black">
+  <img src="https://img.shields.io/badge/prettier-192932?style=for-the-badge&logo=prettier&logoColor=black">
+  <img src="https://img.shields.io/badge/mocha-835e40?style=for-the-badge&logo=mocha&logoColor=white">
+  <img src="https://img.shields.io/badge/swagger-80b43c?style=for-the-badge&logo=swagger&logoColor=black">
+  
+  
   <img src='https://img.shields.io/badge/Node-version1111-green?logo=Node.js'/>
   <img src='https://img.shields.io/badge/Express-v4.17.3-black?logo=Express'/>
   <img src='https://img.shields.io/badge/MongoDB-version111-green?logo=mongodb'/>
@@ -49,6 +58,9 @@
 
 ![서비스 아키텍처 (5)](https://user-images.githubusercontent.com/92852591/161378779-8562517a-1e8b-45e5-93dc-28bbcb2743fe.png)
 
+3. API 명세서
+![화면 캡처 2022-04-04 105832](https://user-images.githubusercontent.com/92852591/161462890-6f20ed25-a5e4-4f83-b56b-93e6b5ebd800.png)
+![swagger](https://user-images.githubusercontent.com/92852591/161462896-dc3e8280-65a4-43e5-91f6-700b76c0fc11.png)
 
 
 
