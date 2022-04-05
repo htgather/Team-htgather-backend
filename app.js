@@ -16,9 +16,9 @@ const rateLimit = require('express-rate-limit')
 const app = express()
 connect()
 
+app.use(cors()) // origin 추가
 app.use(helmet())
 app.use(hpp())
-app.use(cors()) // origin 추가
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 // 1분동안 하나의 ip 주소에서 들어오는 request의 숫자를 100회로 제한
