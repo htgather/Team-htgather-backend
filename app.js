@@ -9,8 +9,9 @@ const swaggerDocument = YAML.load('./api/openapi.yaml')
 require('dotenv').config()
 // 개발 환경에서는 사용할 필요가 없으므로 배포 환경일 때만 적용하면 됨
 // hpp:HTTP 매개변수 오염 공격으로부터 보호하는 Express 미들웨어
-const helmet = require('helmet');
-const hpp = require('hpp');
+const helmet = require('helmet')
+const hpp = require('hpp')
+const rateLimit = require('express-rate-limit')
 
 const app = express()
 connect()
@@ -20,7 +21,13 @@ app.use(hpp())
 app.use(cors()) // origin 추가
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-
+// 1분동안 하나의 ip 주소에서 들어오는 request의 숫자를 100회로 제한
+app.use(
+    rateLimit({
+        windowMs: 1 * 60 * 1000,
+        max: 100,
+    })
+)
 // Request log
 app.use((req, res, next) => {
     if (req.originalUrl === '/') return next()
