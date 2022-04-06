@@ -4,19 +4,15 @@
 <img width='70%' src='https://user-images.githubusercontent.com/89131236/161413678-eb585245-84a0-4507-ae2a-ed56e5257322.png'>
 </p>
 <p align='center'>
-  <img src='https://img.shields.io/badge/React-v17.0.2-blue?logo=React'/>
-  <img src='https://img.shields.io/badge/ReactRouter-v5.2.1-pink?logo=React Router'/>
-  <img src='https://img.shields.io/badge/StyledComponents-v^5.3.3-violet?logo=styled-components'/>
-  <img src='https://img.shields.io/badge/Redux-v4.1.2-764ABC?logo=Redux'/>
-  <img src='https://img.shields.io/badge/Axios-v0.26.0-pink?'/>
-  <br>
-  <img src='https://img.shields.io/badge/ReactPlayer-v2.9.0-red?'/>
-  <img src='https://img.shields.io/badge/WebRTC-333333?logo=WebRTC'/>
+ <img src='https://img.shields.io/badge/Node-version1111-green?logo=Node.js'/>
+  <img src='https://img.shields.io/badge/Express-v4.17.3-black?logo=Express'/>
+  <img src='https://img.shields.io/badge/MongoDB-version111-green?logo=mongodb'/>
   <img src='https://img.shields.io/badge/socket.io-v4.4.1-white?logo=Socket.io'/>
-  <img src='https://img.shields.io/badge/CloudFront-red?'/>
-
-  <img src="https://img.shields.io/badge/Route53-E68B49">
-  <img src="https://img.shields.io/badge/AWS S3-569A31">
+  <img src='https://img.shields.io/badge/prettier-v2.5.1-pink?logo=prettier'/>
+  <img src='https://img.shields.io/badge/mocha-v9.2.2-brown?logo=mocha'/>
+  <img src='https://img.shields.io/badge/chai-v4.3.6-red?logo=chai'/>
+  <img src='https://img.shields.io/badge/swagger-API-brightgreen?logo=swagger'/>
+  <img src='https://img.shields.io/badge/eslint-v8.11.0-purple?logo=eslint'/>
 </p>
 <br>
 
